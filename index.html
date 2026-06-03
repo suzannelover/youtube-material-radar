@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube 素材雷达</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #0a0a0f;
+    --surface: #111118;
+    --border:  #1e1e2e;
+    --accent:  #e8ff47;
+    --accent2: #7c6af7;
+    --text:    #e4e4ef;
+    --muted:   #5a5a72;
+    --card-bg: #13131c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  header {
+    max-width: 720px;
+    margin: 0 auto 32px;
+  }
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ─── Tab 导航 ─── */
+  .tab-nav {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 10px 24px 10px 0;
+    cursor: pointer;
+    margin-bottom: -1px;
+    transition: color .2s, border-color .2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ─── Panel 切换 ─── */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ─── 搜索框（原有，不变）─── */
+  .search-box {
+    max-width: 720px;
+    margin: 0 auto 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .search-box:focus-within { border-color: var(--accent); }
+
+  textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    padding: 20px 24px 16px;
+    resize: none;
+    line-height: 1.6;
+  }
+  textarea::placeholder { color: var(--muted); }
+
+  .search-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px 12px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  button#searchBtn {
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 10px 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: opacity .15s;
+  }
+  button#searchBtn:hover { opacity: .85; }
+  button#searchBtn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ─── 剪辑分析按钮 ─── */
+  button#clipBtn {
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 10px 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: opacity .15s;
+  }
+  button#clipBtn:hover { opacity: .85; }
+  button#clipBtn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ─── 时间过滤栏 ─── */
+  .filter-bar {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-right: 4px;
+    white-space: nowrap;
+  }
+  .filter-options { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+  .filter-btn.active {
+    background: rgba(232,255,71,.08);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ─── 状态提示 ─── */
+  #status {
+    max-width: 720px;
+    margin: 0 auto 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .keyword-badge {
+    display: inline-block;
+    background: rgba(124,106,247,.15);
+    border: 1px solid rgba(124,106,247,.4);
+    color: var(--accent2);
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+  }
+  .date-badge {
+    display: inline-block;
+    background: rgba(232,255,71,.08);
+    border: 1px solid rgba(232,255,71,.2);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+  }
+
+  /* ─── 搜索结果卡片 ─── */
+  #results {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px 24px;
+    animation: slideIn .3s ease both;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: #2e2e42; }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .card:nth-child(1) { animation-delay: .05s; }
+  .card:nth-child(2) { animation-delay: .12s; }
+  .card:nth-child(3) { animation-delay: .19s; }
+  .card:nth-child(4) { animation-delay: .26s; }
+  .card:nth-child(5) { animation-delay: .33s; }
+  .card-left { grid-column: 1; }
+  .card-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+  .card-reason {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #a0a0b8;
+    margin-bottom: 12px;
+  }
+  .meta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+  .meta-item svg { opacity: .6; }
+  .watch-tag {
+    display: inline-block;
+    background: rgba(232,255,71,.08);
+    border: 1px solid rgba(232,255,71,.2);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    margin-top: 12px;
+  }
+  .card-link {
+    grid-column: 2;
+    align-self: start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255,0,0,.06);
+    border: 1.5px solid rgba(255,0,0,.2);
+    border-radius: 4px;
+    color: rgba(255,0,0,.7);
+    text-decoration: none;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .card-link:hover { 
+    background: #FF0000; 
+    border-color: #FF0000; 
+    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255,0,0,.3);
+  }
+
+  /* ─── 加载动画 ─── */
+  .loader {
+    display: flex;
+    gap: 6px;
+    padding: 32px 0;
+    justify-content: center;
+  }
+  .loader span {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  .loader span:nth-child(2) { animation-delay: .2s; }
+  .loader span:nth-child(3) { animation-delay: .4s; }
+  @keyframes pulse {
+    0%,80%,100% { transform: scale(0.6); opacity:.3; }
+    40%         { transform: scale(1);   opacity:1; }
+  }
+
+  .error-msg {
+    background: rgba(255,80,80,.08);
+    border: 1px solid rgba(255,80,80,.3);
+    color: #ff8080;
+    padding: 16px 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ═══════════════════════════════════════════════
+     文案生成页专属样式
+  ═══════════════════════════════════════════════ */
+
+  /* 两列输入区 */
+  .copy-inputs {
+    max-width: 720px;
+    margin: 0 auto 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 560px) {
+    .copy-inputs { grid-template-columns: 1fr; }
+  }
+
+  .input-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color .2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .input-block:focus-within { border-color: var(--accent); }
+
+  .input-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    padding: 14px 20px 8px;
+    text-transform: uppercase;
+  }
+
+  .input-block textarea {
+    padding: 4px 20px 16px;
+    font-size: 14px;
+    flex: 1;
+    min-height: 120px;
+  }
+
+  /* 拖拽上传区 */
+  .drop-zone {
+    flex: 1;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 20px;
+    transition: background .2s;
+    position: relative;
+  }
+  .drop-zone:hover { background: rgba(255,255,255,.02); }
+  .drop-zone.drag-over {
+    background: rgba(232,255,71,.04);
+    border-color: var(--accent);
+  }
+  .drop-zone.has-file {
+    border-color: var(--accent);
+    background: rgba(232,255,71,.04);
+  }
+  .drop-icon {
+    color: var(--muted);
+    transition: color .2s;
+  }
+  .drop-zone.has-file .drop-icon { color: var(--accent); }
+  .drop-text {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+    font-family: 'Space Mono', monospace;
+  }
+  .drop-zone.has-file .drop-text { color: var(--text); }
+  .file-meta {
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    display: none;
+  }
+  .drop-zone.has-file .file-meta { display: block; }
+  #fileInput { display: none; }
+
+  /* 生成按钮行 */
+  .copy-action {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .copy-hint {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+  #generateBtn {
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 10px 28px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: opacity .15s;
+    white-space: nowrap;
+  }
+  #generateBtn:hover { opacity: .85; }
+  #generateBtn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* 文案结果区 */
+  #copy-results {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .copy-block {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    animation: slideIn .3s ease both;
+  }
+  .copy-block:nth-child(1) { animation-delay: .05s; }
+  .copy-block:nth-child(2) { animation-delay: .15s; }
+
+  .copy-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .copy-block-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 4px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-btn.copied {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,255,71,.08);
+  }
+
+  /* FB 贴文结构 */
+  .fb-post {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .fb-section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fb-section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    text-transform: uppercase;
+    opacity: .7;
+  }
+  .fb-section-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .fb-section-text.opening {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+  }
+  .fb-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2px 0;
+  }
+  .fb-tags {
+    font-size: 13px;
+    color: var(--accent2);
+    line-height: 1.8;
+    word-break: break-all;
+  }
+
+  /* 金句区 */
+  .captions-list {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .caption-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .caption-item:last-child { border-bottom: none; }
+  .caption-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 20px;
+  }
+  .caption-text {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.4;
+  }
+  .caption-copy {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 3px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+    flex-shrink: 0;
+  }
+  .caption-copy:hover { border-color: var(--accent); color: var(--accent); }
+  .caption-copy.copied { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,.08); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">▸ YouTube 素材雷达</div>
+  <h1>找到你需要的<span>视频素材</span></h1>
+  <p class="subtitle">描述你的素材方向，AI 自动搜索 + 筛选最相关的 YouTube 视频</p>
+</header>
+
+<!-- Tab 导航 -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('search')">▸ RADAR 素材搜索</button>
+  <button class="tab-btn" onclick="switchTab('copy')">▸ COPY 文案生成</button>
+  <button class="tab-btn" onclick="switchTab('clip')">▸ CLIP 智能剪辑</button>
+</div>
+
+<!-- ══════════════════════════════════════
+     素材搜索页（原有内容，完整保留）
+══════════════════════════════════════ -->
+<div id="panel-search" class="panel active">
+
+  <div class="search-box">
+    <textarea id="queryInput" rows="3"
+      placeholder="例如：賴清德核電政策、物價上漲民生困苦、缺電危機..."></textarea>
+    <div class="search-footer">
+      <span class="hint">描述越具体，结果越准确</span>
+      <button id="searchBtn" onclick="doSearch()">搜索 →</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <span class="filter-label">TIME</span>
+    <div class="filter-options">
+      <button class="filter-btn" data-days="30" onclick="setDays(this)">近1个月</button>
+      <button class="filter-btn active" data-days="90" onclick="setDays(this)">近3个月</button>
+      <button class="filter-btn" data-days="180" onclick="setDays(this)">近6个月</button>
+      <button class="filter-btn" data-days="0" onclick="setDays(this)">不限</button>
+    </div>
+  </div>
+
+  <div id="status"></div>
+  <div id="results"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     文案生成页（新增）
+══════════════════════════════════════ -->
+<div id="panel-copy" class="panel">
+
+  <!-- 两列输入 -->
+  <div class="copy-inputs">
+
+    <!-- 左：核心观点 -->
+    <div class="input-block">
+      <div class="input-label">核心觀點</div>
+      <textarea id="topicInput" rows="5"
+        placeholder="輸入這次視頻的核心主題，例如：賴清德推動核電卻讓百姓缺電付高電費"></textarea>
+    </div>
+
+    <!-- 右：字幕上传 -->
+    <div class="input-block">
+      <div class="input-label">影片字幕 .txt</div>
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+        <svg class="drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <div class="drop-text">點擊或拖拽上傳<br>.txt 字幕文件</div>
+        <div class="file-meta" id="fileMeta">—</div>
+      </div>
+      <input type="file" id="fileInput" accept=".txt">
+    </div>
+
+  </div>
+
+  <!-- 生成按钮行 -->
+  <div class="copy-action" style="max-width:720px;margin:0 auto 32px;">
+    <span class="copy-hint">AI 將根據觀點 + 字幕生成爆款 FB 貼文與影片金句</span>
+    <button id="generateBtn" onclick="generateCopy()">生成文案 →</button>
+  </div>
+
+  <!-- 结果区（默认隐藏） -->
+  <div id="copy-results"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     智能剪辑页（新增）
+══════════════════════════════════════ -->
+<div id="panel-clip" class="panel">
+
+  <!-- URL 输入区 -->
+  <div class="search-box">
+    <input type="text" id="clipUrl" 
+      placeholder="輸入 YouTube 視頻 URL，例如：https://www.youtube.com/watch?v=xxx"
+      style="width:100%;background:transparent;border:none;outline:none;color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:15px;font-weight:300;padding:20px 24px;"/>
+    <div class="search-footer">
+      <span class="hint">支持普通视频、 Shorts、直播回放</span>
+    </div>
+  </div>
+
+  <!-- 剪辑描述区 -->
+  <div class="search-box" style="margin-top:16px;">
+    <textarea id="clipDescription" rows="3"
+      placeholder="描述你想找的片段點位，例如：找官員被追問支支吾吾的那段、主持人質問來賓的精彩辯論、影片開頭的驚人發言..."></textarea>
+    <div class="search-footer">
+      <span class="hint">描述越具體，定位越精確</span>
+    </div>
+  </div>
+
+  <!-- 手动上传字幕区 -->
+  <div class="search-box" style="margin-top:16px;">
+    <div class="input-block" style="border:none;border-radius:0;">
+      <div class="input-label">手動上傳字幕 .txt / .srt</div>
+      <div class="drop-zone" id="clipDropZone" onclick="document.getElementById('clipFileInput').click()">
+        <svg class="drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <div class="drop-text">點擊或拖拽上傳<br>.txt 或 .srt 字幕文件</div>
+        <div class="file-meta" id="clipFileMeta">—</div>
+      </div>
+      <input type="file" id="clipFileInput" accept=".txt,.srt" style="display:none;">
+    </div>
+    <div class="search-footer" style="border-top:1px solid var(--border);">
+      <span class="hint">📌 當 YouTube 視頻無字幕時，可手動上傳字幕文件進行分析</span>
+      <button id="clipBtn" onclick="doClip()">分析 →</button>
+    </div>
+  </div>
+
+  <!-- 状态提示 -->
+  <div id="clip-status"></div>
+
+  <!-- 结果区 -->
+  <div id="clip-results"></div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  Tab 切换
+// ══════════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add('active');
+  document.getElementById(`panel-${tab}`).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+//  素材搜索（原有逻辑，完整保留）
+// ══════════════════════════════════════════
+let selectedDays = 90;
+
+function setDays(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedDays = parseInt(btn.dataset.days);
+}
+
+async function doSearch() {
+  const query = document.getElementById('queryInput').value.trim();
+  if (!query) return;
+
+  const btn     = document.getElementById('searchBtn');
+  const status  = document.getElementById('status');
+  const results = document.getElementById('results');
+
+  btn.disabled = true;
+  results.innerHTML = '<div class="loader"><span></span><span></span><span></span></div>';
+  status.textContent = '正在提炼关键词...';
+
+  try {
+    const res = await fetch('/api/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, days: selectedDays })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      results.innerHTML = `<div class="error-msg">⚠ ${data.error || '请求失败'}</div>`;
+      status.textContent = '';
+      return;
+    }
+
+    const dateLabel = selectedDays === 0 ? '不限時間' : `近${selectedDays}天`;
+    status.innerHTML = `搜索關鍵詞 <span class="keyword-badge">${data.keywords}</span><span class="date-badge">${dateLabel}</span>`;
+    renderCards(data.cards);
+
+  } catch (e) {
+    results.innerHTML = `<div class="error-msg">⚠ 网络错误：${e.message}</div>`;
+    status.textContent = '';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function formatDuration(seconds) {
+  if (!seconds) return '';
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return m > 60 ? `${Math.floor(m/60)}h ${m%60}m` : `${m}:${String(s).padStart(2,'0')}`;
+}
+
+function renderCards(cards) {
+  const results = document.getElementById('results');
+  if (!cards || cards.length === 0) {
+    results.innerHTML = '<div class="error-msg">没有找到相关视频，试试换个描述</div>';
+    return;
+  }
+  results.innerHTML = cards.map((c, i) => `
+    <div class="card">
+      <div class="card-left">
+        <div class="card-num">推荐 ${String(i+1).padStart(2,'0')}</div>
+        <div class="card-title">${escHtml(c.title)}</div>
+        <div class="card-reason">${escHtml(c.reason)}</div>
+        <div class="meta-row">
+          ${c.duration ? `<div class="meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>${formatDuration(c.duration)}</div>` : ''}
+          ${c.uploader ? `<div class="meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>${escHtml(c.uploader)}</div>` : ''}
+          ${c.upload_date ? `<div class="meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>${escHtml(c.upload_date)}</div>` : ''}
+        </div>
+        <div class="watch-tag">⏱ ${escHtml(c.watch_segment)}</div>
+      </div>
+      <a class="card-link" href="${escHtml(c.url)}" target="_blank" title="在 YouTube 觀看">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </a>
+    </div>
+  `).join('');
+}
+
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSearch(); }
+});
+
+// ══════════════════════════════════════════
+//  文案生成页逻辑
+// ══════════════════════════════════════════
+let subtitleContent = '';
+
+// 文件读取
+function handleFile(file) {
+  if (!file || !file.name.endsWith('.txt')) {
+    alert('請上傳 .txt 格式的字幕文件');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    subtitleContent = e.target.result;
+    const charCount = subtitleContent.length;
+    const dropZone  = document.getElementById('dropZone');
+    const fileMeta  = document.getElementById('fileMeta');
+    dropZone.classList.add('has-file');
+    fileMeta.textContent = `${file.name}  ·  ${charCount.toLocaleString()} 字`;
+    // 更新上传图标为勾
+    dropZone.querySelector('.drop-text').textContent = '文件已讀取，可重新上傳';
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+// 点击上传
+document.getElementById('fileInput').addEventListener('change', e => {
+  handleFile(e.target.files[0]);
+});
+
+// 拖拽上传
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('drag-over');
+});
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  handleFile(e.dataTransfer.files[0]);
+});
+
+// 生成文案
+async function generateCopy() {
+  const topic = document.getElementById('topicInput').value.trim();
+  if (!topic) { alert('請輸入核心觀點'); return; }
+  if (!subtitleContent) { alert('請上傳字幕文件'); return; }
+
+  const btn     = document.getElementById('generateBtn');
+  const results = document.getElementById('copy-results');
+
+  btn.disabled = true;
+  results.innerHTML = '<div class="loader"><span></span><span></span><span></span></div>';
+
+  try {
+    const res = await fetch('/api/generate_copy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic, subtitle: subtitleContent })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      results.innerHTML = `<div class="error-msg">⚠ ${data.error || '生成失敗，請重試'}</div>`;
+      return;
+    }
+
+    renderCopyResults(data);
+
+  } catch (e) {
+    results.innerHTML = `<div class="error-msg">⚠ 網路錯誤：${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// 渲染文案结果
+function renderCopyResults(data) {
+  const results = document.getElementById('copy-results');
+  const fb = data.fb_post || {};
+  const captions = data.captions || [];
+
+  // 拼完整 FB 贴文（用于整体复制）
+  const fullFbText = [
+    fb.opening  || '',
+    '',
+    fb.body     || '',
+    '',
+    fb.closing  || '',
+    '',
+    fb.cta      || '',
+    '',
+    fb.tags     || '',
+  ].join('\n');
+
+  results.innerHTML = `
+
+    <!-- FB 贴文 -->
+    <div class="copy-block">
+      <div class="copy-block-header">
+        <span class="copy-block-title">FB 爆款貼文</span>
+        <button class="copy-btn" onclick="copyText(${JSON.stringify(fullFbText)}, this)">複製全文</button>
+      </div>
+      <div class="fb-post">
+        <div class="fb-section">
+          <div class="fb-section-label">震撼首行</div>
+          <div class="fb-section-text opening">${escHtml(fb.opening || '')}</div>
+        </div>
+        <div class="fb-divider"></div>
+        <div class="fb-section">
+          <div class="fb-section-label">內容論述</div>
+          <div class="fb-section-text">${escHtml(fb.body || '')}</div>
+        </div>
+        <div class="fb-divider"></div>
+        <div class="fb-section">
+          <div class="fb-section-label">紮心結論</div>
+          <div class="fb-section-text">${escHtml(fb.closing || '')}</div>
+        </div>
+        <div class="fb-divider"></div>
+        <div class="fb-section">
+          <div class="fb-section-label">留言區引戰</div>
+          <div class="fb-section-text">${escHtml(fb.cta || '')}</div>
+        </div>
+        <div class="fb-divider"></div>
+        <div class="fb-tags">${escHtml(fb.tags || '')}</div>
+      </div>
+    </div>
+
+    <!-- 影片金句 -->
+    <div class="copy-block">
+      <div class="copy-block-header">
+        <span class="copy-block-title">影片固定字幕 · 金句</span>
+        <button class="copy-btn" onclick="copyText(${JSON.stringify(captions.join('\n'))}, this)">複製全部</button>
+      </div>
+      <div class="captions-list">
+        ${captions.map((c, i) => `
+          <div class="caption-item">
+            <span class="caption-num">0${i+1}</span>
+            <span class="caption-text">${escHtml(c)}</span>
+            <button class="caption-copy" onclick="copyText(${JSON.stringify(c)}, this)">複製</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+  `;
+}
+
+// 通用复制函数
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.classList.add('copied');
+    const orig = btn.textContent;
+    btn.textContent = '✓ 已複製';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = orig;
+    }, 1500);
+  });
+}
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════
+//  智能剪辑页逻辑
+// ══════════════════════════════════════════
+let clipSubtitleContent = '';  // 手动上传的字幕内容
+
+// 剪辑页面文件处理
+function handleClipFile(file) {
+  if (!file || (!file.name.endsWith('.txt') && !file.name.endsWith('.srt'))) {
+    alert('請上傳 .txt 或 .srt 格式的字幕文件');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    clipSubtitleContent = e.target.result;
+    const charCount = clipSubtitleContent.length;
+    const dropZone  = document.getElementById('clipDropZone');
+    const fileMeta  = document.getElementById('clipFileMeta');
+    dropZone.classList.add('has-file');
+    fileMeta.textContent = `${file.name}  ·  ${charCount.toLocaleString()} 字`;
+    dropZone.querySelector('.drop-text').textContent = '文件已讀取，可重新上傳';
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+// 剪辑页面文件上传事件绑定
+document.addEventListener('DOMContentLoaded', () => {
+  const fileInput = document.getElementById('clipFileInput');
+  const dropZone = document.getElementById('clipDropZone');
+  
+  // 点击上传
+  fileInput?.addEventListener('change', e => {
+    handleClipFile(e.target.files[0]);
+  });
+  
+  // 拖拽上传
+  dropZone?.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  
+  dropZone?.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+  });
+  
+  dropZone?.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    handleClipFile(e.dataTransfer.files[0]);
+  });
+});
+
+async function doClip() {
+  const url = document.getElementById('clipUrl').value.trim();
+  const clipDescription = document.getElementById('clipDescription').value.trim();
+  
+  if (!url) { alert('請輸入 YouTube 視頻 URL'); return; }
+  if (!clipDescription) { alert('請描述你想找的片段點位'); return; }
+
+  const btn     = document.getElementById('clipBtn');
+  const status  = document.getElementById('clip-status');
+  const results = document.getElementById('clip-results');
+
+  btn.disabled = true;
+  results.innerHTML = '<div class="loader"><span></span><span></span><span></span></div>';
+  status.innerHTML = clipSubtitleContent 
+    ? '<span style="color:var(--accent2)">正在分析手動上傳的字幕...</span>'
+    : '<span style="color:var(--accent2)">正在分析視頻字幕...</span>';
+
+  try {
+    const body = { url, clip_description: clipDescription };
+    if (clipSubtitleContent) {
+      body.subtitle = clipSubtitleContent;  // 如果有手动上传的字幕，添加到请求中
+    }
+    
+    const res = await fetch('/api/clip', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      results.innerHTML = `<div class="error-msg">⚠ ${data.error || '分析失敗，請重試'}</div>`;
+      status.textContent = '';
+      return;
+    }
+
+    renderClipResults(data);
+
+  } catch (e) {
+    results.innerHTML = `<div class="error-msg">⚠ 網路錯誤：${e.message}</div>`;
+    status.textContent = '';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderClipResults(data) {
+  const status  = document.getElementById('clip-status');
+  const results = document.getElementById('clip-results');
+
+  // 显示字幕状态
+  const subStatus = data.subtitle_available 
+    ? '<span style="color:var(--accent)">✓ 字幕可用</span>' 
+    : '<span style="color:#ff8080">✗ 無字幕</span>';
+  status.innerHTML = `影片 ID: <span class="keyword-badge">${data.video_id}</span> ${subStatus}`;
+
+  if (!data.subtitle_available) {
+    results.innerHTML = `
+      <div class="copy-block" style="padding:24px;text-align:center;">
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;">
+          ${data.message}
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  if (!data.segments || data.segments.length === 0) {
+    results.innerHTML = `<div class="error-msg">⚠ ${data.message}</div>`;
+    return;
+  }
+
+  // 渲染时间片段结果
+  results.innerHTML = `
+    <div style="max-width:720px;margin:0 auto 16px;padding:16px 20px;background:var(--card-bg);border:1px solid var(--border);border-radius:4px;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:8px;">找到 ${data.total_segments} 個匹配片段</div>
+      <div style="font-size:13px;color:var(--text);">${data.message}</div>
+    </div>
+
+    <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:16px;">
+      ${data.segments.map((seg, i) => `
+        <div class="card">
+          <div class="card-left">
+            <div class="card-num">片段 ${String(i+1).padStart(2,'0')}</div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+              <div style="background:rgba(232,255,71,.1);border:1px solid rgba(232,255,71,.3);color:var(--accent);padding:6px 14px;border-radius:4px;font-family:'Space Mono',monospace;font-size:14px;font-weight:500;">
+                ${escHtml(seg.start_fmt)} - ${escHtml(seg.end_fmt)}
+              </div>
+              <div style="font-size:12px;color:var(--muted);font-family:'Space Mono',monospace;">
+                共 ${Math.round(seg.end_sec - seg.start_sec)} 秒
+              </div>
+            </div>
+            <div class="card-reason">📍 ${escHtml(seg.reason)}</div>
+            <button class="clip-copy-btn" onclick="copyClipUrl('${escHtml(data.video_id)}', ${seg.start_sec})" 
+              style="margin-top:12px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:6px 16px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:2px;transition:all .15s;">
+              複製帶時間戳的連結
+            </button>
+          </div>
+          <a class="card-link" href="https://www.youtube.com/watch?v=${escHtml(data.video_id)}&t=${Math.floor(seg.start_sec)}s" target="_blank" title="跳轉到該片段">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // 添加复制按钮的悬停效果
+  document.querySelectorAll('.clip-copy-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      btn.style.borderColor = 'var(--accent)';
+      btn.style.color = 'var(--accent)';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.borderColor = 'var(--border)';
+      btn.style.color = 'var(--muted)';
+    });
+  });
+}
+
+function copyClipUrl(videoId, startSec) {
+  const url = `https://www.youtube.com/watch?v=${videoId}&t=${Math.floor(startSec)}s`;
+  navigator.clipboard.writeText(url).then(() => {
+    alert('✓ 連結已複製到剪貼板');
+  });
+}
+</script>
+</body>
+</html>
