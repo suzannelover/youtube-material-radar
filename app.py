@@ -11,14 +11,20 @@ from services.keyword     import extract_keywords
 from services.search      import search_youtube_funnel
 from services.filter      import filter_by_date, analyze_and_filter
 from services.copy_writer import generate_copy
-from services.clipper     import analyze_clip
-from config               import DOWNLOAD_DIR, OUTPUT_DIR
+from services.clipper         import analyze_clip
+from services.vision_clipper import analyze_video
+from services.video_processor import save_upload, cut_video
+from config                   import (DOWNLOAD_DIR, OUTPUT_DIR,
+                                       UPLOAD_DIR, CLIP_OUT_DIR,
+                                       CLIP_DEFAULT_DURATION, CLIP_MIN_DURATION,
+                                       CLIP_MAX_DURATION, MAX_UPLOAD_SIZE_MB)
 
 # 確保運行時目錄存在
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR,   exist_ok=True)
 
 app = Flask(__name__, static_folder=".")
+app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
 
 # ── 靜態頁面 ──────────────────────────────────────────────────────────────────
@@ -129,6 +135,83 @@ def api_clip():
     except Exception as e:
         print(f"[ERROR /api/clip] {e}")
         return jsonify({"error": str(e)}), 500
+
+
+# ── 智能剪輯 V2（上傳影片 + GLM 視覺剪輯）─────────────────────────────────
+
+@app.route("/api/clip_v2", methods=["POST"])
+def api_clip_v2():
+    """
+    請求：multipart/form-data
+        video:       <文件>  （mp4/mov/avi/webm）
+        description: "找亮點片段"
+        duration:    20       （可選，15/20/25/30）
+
+    返回：
+    {
+        "status":       "ok",
+        "filename":     "clip_abc123.mp4",
+        "duration":     18.5,
+        "start_sec":    42.0,
+        "end_sec":      60.5,
+        "download_url": "/api/clip_v2/download/clip_abc123.mp4",
+        "reason":       "候選人回答時表情生動"
+    }
+    """
+    if "video" not in request.files:
+        return jsonify({"error": "請上傳影片檔案"}), 400
+
+    file = request.files["video"]
+    if not file.filename:
+        return jsonify({"error": "請選擇影片檔案"}), 400
+
+    description = request.form.get("description", "").strip()
+    if not description:
+        return jsonify({"error": "請輸入剪輯描述"}), 400
+
+    try:
+        target = int(request.form.get("duration", CLIP_DEFAULT_DURATION))
+    except ValueError:
+        target = CLIP_DEFAULT_DURATION
+    target = max(CLIP_MIN_DURATION, min(CLIP_MAX_DURATION, target))
+
+    try:
+        # 1. 保存上传
+        video_path = save_upload(file)
+
+        # 2. GLM 视觉分析
+        seg = analyze_video(str(video_path), description, target)
+
+        # 3. FFmpeg 切割
+        duration = seg["end_sec"] - seg["start_sec"]
+        out_path = cut_video(video_path, seg["start_sec"], duration)
+
+        return jsonify({
+            "status":        "ok",
+            "filename":      out_path.name,
+            "duration":      round(duration, 1),
+            "start_sec":     round(seg["start_sec"], 1),
+            "end_sec":       round(seg["end_sec"], 1),
+            "start_fmt":     seg["start_fmt"],
+            "end_fmt":       seg["end_fmt"],
+            "download_url":  f"/api/clip_v2/download/{out_path.name}",
+            "reason":        seg["reason"],
+        })
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except FileNotFoundError as e:
+        print(f"[ERROR /api/clip_v2] {e}")
+        return jsonify({"error": "伺服器缺少 FFmpeg，請確認已安裝"}), 500
+    except Exception as e:
+        print(f"[ERROR /api/clip_v2] {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/clip_v2/download/<path:filename>")
+def api_clip_v2_download(filename: str):
+    """下载剪辑后的视频"""
+    return send_from_directory(CLIP_OUT_DIR, filename)
 
 
 # ── 啟動 ──────────────────────────────────────────────────────────────────────

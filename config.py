@@ -18,3 +18,25 @@ TW_MEDIA = [
 # 下载 / 输出目录
 DOWNLOAD_DIR = "downloads"
 OUTPUT_DIR   = "outputs"
+
+# ─── CLIP V2 配置 ─────────────────────────────────────────────────────────────
+
+# GLM-4.6V-Flash 视觉模型
+GLM_API_KEY           = "your-glm-key-here"   # ← 请填入你的智谱 API Key
+GLM_MODEL             = "glm-4.6v-flash"
+GLM_BASE_URL          = "https://open.bigmodel.cn/api/paas/v4/"
+
+# 视觉参数
+VISION_FRAME_W        = 640         # 帧图片宽度
+VISION_QUALITY        = 70          # JPEG 质量 %
+VISION_USE_THINKING   = False       # 是否启用 GLM 思考模式
+
+# 剪辑参数
+CLIP_DEFAULT_DURATION = 20          # 默认目标秒数
+CLIP_MIN_DURATION     = 15
+CLIP_MAX_DURATION     = 30
+
+# 上传 / 输出目录
+UPLOAD_DIR            = "uploads"
+CLIP_OUT_DIR          = "outputs/clips"
+MAX_UPLOAD_SIZE_MB    = 200

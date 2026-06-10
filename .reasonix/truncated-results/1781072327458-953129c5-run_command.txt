@@ -1,0 +1,533 @@
+$ dir "C:\Program Files" /s /b ffmpeg.exe 2>nul || dir "C:\Program Files (x86)" /s /b ffmpeg.exe 2>nul || dir %USERPROFILE%\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg* /s /b ffmpeg.exe 2>nul
+[exit 1]
+C:\Program Files\AMD
+C:\Program Files\AntiCheatExpert
+C:\Program Files\Application Verifier
+C:\Program Files\Clash for Windows Service
+C:\Program Files\CMake
+C:\Program Files\Common Files
+C:\Program Files\dotnet
+C:\Program Files\DrcomWebPlugin
+C:\Program Files\EA Games
+C:\Program Files\Epic Games
+C:\Program Files\Git
+C:\Program Files\Go
+C:\Program Files\Google
+C:\Program Files\Internet Explorer
+C:\Program Files\IQIYI Video
+C:\Program Files\Java
+C:\Program Files\LGHUB
+C:\Program Files\Logi
+C:\Program Files\Logitech
+C:\Program Files\Microsoft
+C:\Program Files\Microsoft Help Viewer
+C:\Program Files\Microsoft OneDrive
+C:\Program Files\Microsoft SQL Server
+C:\Program Files\Microsoft SQL Server Compact Edition
+C:\Program Files\Microsoft Synchronization Services
+C:\Program Files\Microsoft Update Health Tools
+C:\Program Files\Microsoft Visual Studio
+C:\Program Files\Microsoft Visual Studio 10.0
+C:\Program Files\Microsoft Visual Studio 9.0
+C:\Program Files\Microsoft.NET
+C:\Program Files\mingw-w64
+C:\Program Files\ModifiableWindowsApps
+C:\Program Files\MSBuild
+C:\Program Files\MySQL
+C:\Program Files\nodejs
+C:\Program Files\NVIDIA Corporation
+C:\Program Files\NVIDIA GPU Computing Toolkit
+C:\Program Files\PremiumSoft
+C:\Program Files\QuarkMini
+C:\Program Files\QuarkUpdater
+C:\Program Files\Reference Assemblies
+C:\Program Files\Rockstar Games
+C:\Program Files\RUXIM
+C:\Program Files\sangfor
+C:\Program Files\Sony
+C:\Program Files\SteelSeries
+C:\Program Files\Tencent
+C:\Program Files\TortoiseGit
+C:\Program Files\Windows Defender
+C:\Program Files\Windows Mail
+C:\Program Files\Windows Media Player
+C:\Program Files\Windows NT
+C:\Program Files\Windows Photo Viewer
+C:\Program Files\WindowsPowerShell
+C:\Program Files\WSL
+C:\Program Files\XMind
+C:\Program Files\AMD\CIM
+C:\Program Files\AMD\InstallUEP
+C:\Program Files\AMD\CIM\Log
+C:\Program Files\AMD\CIM\Log\CommonLibrary_Install.log_2022-12-7_13_23_11.log
+C:\Program Files\AMD\CIM\Log\Install.log
+C:\Program Files\AMD\InstallUEP\AMDInstallUEP.exe
+C:\Program Files\AntiCheatExpert\ACE-BASE-S1.sys
+C:\Program Files\AntiCheatExpert\ACE-BASE.sys
+C:\Program Files\AntiCheatExpert\ace-boot.dat
+C:\Program Files\AntiCheatExpert\ACE-BOOT.sys
+C:\Program Files\AntiCheatExpert\ACE-CORE102131.sys
+C:\Program Files\AntiCheatExpert\ACE-CORE102706.sys
+C:\Program Files\AntiCheatExpert\ACE-CORE10405.sys
+C:\Program Files\AntiCheatExpert\ACE-CORE202131.sys
+C:\Program Files\AntiCheatExpert\ACE-CORE202706.sys
+C:\Program Files\AntiCheatExpert\ACE-CORE20405.sys
+C:\Program Files\AntiCheatExpert\ACE-Service64.exe
+C:\Program Files\AntiCheatExpert\ACE-Tray.exe
+C:\Program Files\AntiCheatExpert\InGame
+C:\Program Files\AntiCheatExpert\SGuard
+C:\Program Files\AntiCheatExpert\Uninstaller.exe
+C:\Program Files\AntiCheatExpert\InGame\172
+C:\Program Files\AntiCheatExpert\InGame\23
+C:\Program Files\AntiCheatExpert\InGame\172\x64
+C:\Program Files\AntiCheatExpert\InGame\172\x86
+C:\Program Files\AntiCheatExpert\InGame\172\x64\ACE-Base.rc
+C:\Program Files\AntiCheatExpert\InGame\172\x64\TerSafe.dll
+C:\Program Files\AntiCheatExpert\InGame\172\x86\ACE-Base.rc
+C:\Program Files\AntiCheatExpert\InGame\172\x86\TerSafe.dll
+C:\Program Files\AntiCheatExpert\InGame\23\x64
+C:\Program Files\AntiCheatExpert\InGame\23\x86
+C:\Program Files\AntiCheatExpert\InGame\23\x64\ACE-Base.rc
+C:\Program Files\AntiCheatExpert\InGame\23\x64\ACE-DRV64.dll
+C:\Program Files\AntiCheatExpert\InGame\23\x86\ACE-Base.rc
+C:\Program Files\AntiCheatExpert\InGame\23\x86\ACE-DRV32.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64
+C:\Program Files\AntiCheatExpert\SGuard\x64\ACE-Safe.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64\ACE-Trace.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins
+C:\Program Files\AntiCheatExpert\SGuard\x64\product.rc
+C:\Program Files\AntiCheatExpert\SGuard\x64\SGuard.rc
+C:\Program Files\AntiCheatExpert\SGuard\x64\SGuard64.exe
+C:\Program Files\AntiCheatExpert\SGuard\x64\SGuardSvc64.exe
+C:\Program Files\AntiCheatExpert\SGuard\x64\SGuardUpdate64.exe
+C:\Program Files\AntiCheatExpert\SGuard\x64\Uninstall64.exe
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins\ACE-ATS64.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins\ACE-CSI64.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins\ACE-DFS64.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins\ACE-DRV64.dll
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins\ACE-SSC-DRV64.sys
+C:\Program Files\AntiCheatExpert\SGuard\x64\Plugins\ACE-SSC64.dll
+C:\Program Files\Application Verifier\vrfauto.dll
+C:\Program Files\Application Verifier\vrfauto.h
+C:\Program Files\Application Verifier\vrfauto.idl
+C:\Program Files\Clash for Windows Service\clash-core-service.exe
+C:\Program Files\Clash for Windows Service\schtasks.xml
+C:\Program Files\CMake\bin
+C:\Program Files\CMake\doc
+C:\Program Files\CMake\man
+C:\Program Files\CMake\share
+C:\Program Files\CMake\bin\cmake-gui.exe
+C:\Program Files\CMake\bin\cmake.exe
+C:\Program Files\CMake\bin\cmcldeps.exe
+C:\Program Files\CMake\bin\cpack.exe
+C:\Program Files\CMake\bin\ctest.exe
+C:\Program Files\CMake\doc\cmake
+C:\Program Files\CMake\doc\cmake\cmake.org.html
+C:\Program Files\CMake\doc\cmake\CMake.qch
+C:\Program Files\CMake\doc\cmake\cmcppdap
+C:\Program Files\CMake\doc\cmake\cmcurl
+C:\Program Files\CMake\doc\cmake\cmlibarchive
+C:\Program Files\CMake\doc\cmake\cmliblzma
+C:\Program Files\CMake\doc\cmake\cmlibrhash
+C:\Program Files\CMake\doc\cmake\cmlibuv
+C:\Program Files\CMake\doc\cmake\cmnghttp2
+C:\Program Files\CMake\doc\cmake\cmsys
+C:\Program Files\CMake\doc\cmake\cmzlib
+C:\Program Files\CMake\doc\cmake\cmzstd
+C:\Program Files\CMake\doc\cmake\Copyright.txt
+C:\Program Files\CMake\doc\cmake\html
+C:\Program Files\CMake\doc\cmake\cmcppdap\NOTICE
+C:\Program Files\CMake\doc\cmake\cmcurl\COPYING
+C:\Program Files\CMake\doc\cmake\cmlibarchive\COPYING
+C:\Program Files\CMake\doc\cmake\cmliblzma\COPYING
+C:\Program Files\CMake\doc\cmake\cmlibrhash\COPYING
+C:\Program Files\CMake\doc\cmake\cmlibuv\LICENSE
+C:\Program Files\CMake\doc\cmake\cmnghttp2\COPYING
+C:\Program Files\CMake\doc\cmake\cmsys\Copyright.txt
+C:\Program Files\CMake\doc\cmake\cmzlib\Copyright.txt
+C:\Program Files\CMake\doc\cmake\cmzstd\LICENSE
+C:\Program Files\CMake\doc\cmake\html\command
+C:\Program Files\CMake\doc\cmake\html\cpack_gen
+C:\Program Files\CMake\doc\cmake\html\envvar
+C:\Program Files\CMake\doc\cmake\html\generator
+C:\Program Files\CMake\doc\cmake\html\genindex.html
+C:\Program Files\CMake\doc\cmake\html\guide
+C:\Program Files\CMake\doc\cmake\html\index.html
+C:\Program Files\CMake\doc\cmake\html\manual
+C:\Program Files\CMake\doc\cmake\html\module
+C:\Program Files\CMake\doc\cmake\html\objects.inv
+C:\Program Files\CMake\doc\cmake\html\policy
+C:\Program Files\CMake\doc\cmake\html\prop_cache
+C:\Program Files\CMake\doc\cmake\html\prop_dir
+C:\Program Files\CMake\doc\cmake\html\prop_gbl
+C:\Program Files\CMake\doc\cmake\html\prop_inst
+C:\Program Files\CMake\doc\cmake\html\prop_sf
+C:\Program Files\CMake\doc\cmake\html\prop_test
+C:\Program Files\CMake\doc\cmake\html\prop_tgt
+C:\Program Files\CMake\doc\cmake\html\release
+C:\Program Files\CMake\doc\cmake\html\search.html
+C:\Program Files\CMake\doc\cmake\html\searchindex.js
+C:\Program Files\CMake\doc\cmake\html\variable
+C:\Program Files\CMake\doc\cmake\html\_downloads
+C:\Program Files\CMake\doc\cmake\html\_images
+C:\Program Files\CMake\doc\cmake\html\_sources
+C:\Program Files\CMake\doc\cmake\html\_static
+C:\Program Files\CMake\doc\cmake\html\command\add_compile_definitions.html
+C:\Program Files\CMake\doc\cmake\html\command\add_compile_options.html
+C:\Program Files\CMake\doc\cmake\html\command\add_custom_command.html
+C:\Program Files\CMake\doc\cmake\html\command\add_custom_target.html
+C:\Program Files\CMake\doc\cmake\html\command\add_definitions.html
+C:\Program Files\CMake\doc\cmake\html\command\add_dependencies.html
+C:\Program Files\CMake\doc\cmake\html\command\add_executable.html
+C:\Program Files\CMake\doc\cmake\html\command\add_library.html
+C:\Program Files\CMake\doc\cmake\html\command\add_link_options.html
+C:\Program Files\CMake\doc\cmake\html\command\add_subdirectory.html
+C:\Program Files\CMake\doc\cmake\html\command\add_test.html
+C:\Program Files\CMake\doc\cmake\html\command\aux_source_directory.html
+C:\Program Files\CMake\doc\cmake\html\command\block.html
+C:\Program Files\CMake\doc\cmake\html\command\break.html
+C:\Program Files\CMake\doc\cmake\html\command\build_command.html
+C:\Program Files\CMake\doc\cmake\html\command\build_name.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_file_api.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_host_system_information.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_language.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_minimum_required.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_parse_arguments.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_path.html
+C:\Program Files\CMake\doc\cmake\html\command\cmake_policy.html
+C:\Program Files\CMake\doc\cmake\html\command\configure_file.html
+C:\Program Files\CMake\doc\cmake\html\command\continue.html
+C:\Program Files\CMake\doc\cmake\html\command\create_test_sourcelist.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_build.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_configure.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_coverage.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_empty_binary_directory.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_memcheck.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_read_custom_files.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_run_script.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_sleep.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_start.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_submit.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_test.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_update.html
+C:\Program Files\CMake\doc\cmake\html\command\ctest_upload.html
+C:\Program Files\CMake\doc\cmake\html\command\define_property.html
+C:\Program Files\CMake\doc\cmake\html\command\else.html
+C:\Program Files\CMake\doc\cmake\html\command\elseif.html
+C:\Program Files\CMake\doc\cmake\html\command\enable_language.html
+C:\Program Files\CMake\doc\cmake\html\command\enable_testing.html
+C:\Program Files\CMake\doc\cmake\html\command\endblock.html
+C:\Program Files\CMake\doc\cmake\html\command\endforeach.html
+C:\Program Files\CMake\doc\cmake\html\command\endfunction.html
+C:\Program Files\CMake\doc\cmake\html\command\endif.html
+C:\Program Files\CMake\doc\cmake\html\command\endmacro.html
+C:\Program Files\CMake\doc\cmake\html\command\endwhile.html
+C:\Program Files\CMake\doc\cmake\html\command\execute_process.html
+C:\Program Files\CMake\doc\cmake\html\command\exec_program.html
+C:\Program Files\CMake\doc\cmake\html\command\export.html
+C:\Program Files\CMake\doc\cmake\html\command\export_library_dependencies.html
+C:\Program Files\CMake\doc\cmake\html\command\file.html
+C:\Program Files\CMake\doc\cmake\html\command\find_file.html
+C:\Program Files\CMake\doc\cmake\html\command\find_library.html
+C:\Program Files\CMake\doc\cmake\html\command\find_package.html
+C:\Program Files\CMake\doc\cmake\html\command\find_path.html
+C:\Program Files\CMake\doc\cmake\html\command\find_program.html
+C:\Program Files\CMake\doc\cmake\html\command\fltk_wrap_ui.html
+C:\Program Files\CMake\doc\cmake\html\command\foreach.html
+C:\Program Files\CMake\doc\cmake\html\command\function.html
+C:\Program Files\CMake\doc\cmake\html\command\get_cmake_property.html
+C:\Program Files\CMake\doc\cmake\html\command\get_directory_property.html
+C:\Program Files\CMake\doc\cmake\html\command\get_filename_component.html
+C:\Program Files\CMake\doc\cmake\html\command\get_property.html
+C:\Program Files\CMake\doc\cmake\html\command\get_source_file_property.html
+C:\Program Files\CMake\doc\cmake\html\command\get_target_property.html
+C:\Program Files\CMake\doc\cmake\html\command\get_test_property.html
+C:\Program Files\CMake\doc\cmake\html\command\if.html
+C:\Program Files\CMake\doc\cmake\html\command\include.html
+C:\Program Files\CMake\doc\cmake\html\command\include_directories.html
+C:\Program Files\CMake\doc\cmake\html\command\include_external_msproject.html
+C:\Program Files\CMake\doc\cmake\html\command\include_guard.html
+C:\Program Files\CMake\doc\cmake\html\command\include_regular_expression.html
+C:\Program Files\CMake\doc\cmake\html\command\install.html
+C:\Program Files\CMake\doc\cmake\html\command\install_files.html
+C:\Program Files\CMake\doc\cmake\html\command\install_programs.html
+C:\Program Files\CMake\doc\cmake\html\command\install_targets.html
+C:\Program Files\CMake\doc\cmake\html\command\link_directories.html
+C:\Program Files\CMake\doc\cmake\html\command\link_libraries.html
+C:\Program Files\CMake\doc\cmake\html\command\list.html
+C:\Program Files\CMake\doc\cmake\html\command\load_cache.html
+C:\Program Files\CMake\doc\cmake\html\command\load_command.html
+C:\Program Files\CMake\doc\cmake\html\command\macro.html
+C:\Program Files\CMake\doc\cmake\html\command\make_directory.html
+C:\Program Files\CMake\doc\cmake\html\command\mark_as_advanced.html
+C:\Program Files\CMake\doc\cmake\html\command\math.html
+C:\Program Files\CMake\doc\cmake\html\command\message.html
+C:\Program Files\CMake\doc\cmake\html\command\option.html
+C:\Program Files\CMake\doc\cmake\html\command\output_required_files.html
+C:\Program Files\CMake\doc\cmake\html\command\project.html
+C:\Program Files\CMake\doc\cmake\html\command\qt_wrap_cpp.html
+C:\Program Files\CMake\doc\cmake\html\command\qt_wrap_ui.html
+C:\Program Files\CMake\doc\cmake\html\command\remove.html
+C:\Program Files\CMake\doc\cmake\html\command\remove_definitions.html
+C:\Program Files\CMake\doc\cmake\html\command\return.html
+C:\Program Files\CMake\doc\cmake\html\command\separate_arguments.html
+C:\Program Files\CMake\doc\cmake\html\command\set.html
+C:\Program Files\CMake\doc\cmake\html\command\set_directory_properties.html
+C:\Program Files\CMake\doc\cmake\html\command\set_property.html
+C:\Program Files\CMake\doc\cmake\html\command\set_source_files_properties.html
+C:\Program Files\CMake\doc\cmake\html\command\set_target_properties.html
+C:\Program Files\CMake\doc\cmake\html\command\set_tests_properties.html
+C:\Program Files\CMake\doc\cmake\html\command\site_name.html
+C:\Program Files\CMake\doc\cmake\html\command\source_group.html
+C:\Program Files\CMake\doc\cmake\html\command\string.html
+C:\Program Files\CMake\doc\cmake\html\command\subdirs.html
+C:\Program Files\CMake\doc\cmake\html\command\subdir_depends.html
+C:\Program Files\CMake\doc\cmake\html\command\target_compile_definitions.html
+C:\Program Files\CMake\doc\cmake\html\command\target_compile_features.html
+C:\Program Files\CMake\doc\cmake\html\command\target_compile_options.html
+C:\Program Files\CMake\doc\cmake\html\command\target_include_directories.html
+C:\Program Files\CMake\doc\cmake\html\command\target_link_directories.html
+C:\Program Files\CMake\doc\cmake\html\command\target_link_libraries.html
+C:\Program Files\CMake\doc\cmake\html\command\target_link_options.html
+C:\Program Files\CMake\doc\cmake\html\command\target_precompile_headers.html
+C:\Program Files\CMake\doc\cmake\html\command\target_sources.html
+C:\Program Files\CMake\doc\cmake\html\command\try_compile.html
+C:\Program Files\CMake\doc\cmake\html\command\try_run.html
+C:\Program Files\CMake\doc\cmake\html\command\unset.html
+C:\Program Files\CMake\doc\cmake\html\command\use_mangled_mesa.html
+C:\Program Files\CMake\doc\cmake\html\command\utility_source.html
+C:\Program Files\CMake\doc\cmake\html\command\variable_requires.html
+C:\Program Files\CMake\doc\cmake\html\command\variable_watch.html
+C:\Program Files\CMake\doc\cmake\html\command\while.html
+C:\Program Files\CMake\doc\cmake\html\command\write_file.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\archive.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\bundle.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\cygwin.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\deb.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\dmg.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\external.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\freebsd.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\ifw.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\innosetup.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\nsis.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\nuget.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\packagemaker.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\productbuild.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\rpm.html
+C:\Program Files\CMake\doc\cmake\html\cpack_gen\wix.html
+C:\Program Files\CMake\doc\cmake\html\envvar\ADSP_ROOT.html
+C:\Program Files\CMake\doc\cmake\html\envvar\ASM_DIALECT.html
+C:\Program Files\CMake\doc\cmake\html\envvar\ASM_DIALECTFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CC.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CCMAKE_COLORS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_APPBUNDLE_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_APPLE_SILICON_PROCESSOR.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_BUILD_PARALLEL_LEVEL.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_BUILD_TYPE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_COLOR_DIAGNOSTICS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_CONFIGURATION_TYPES.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_CONFIG_TYPE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_CROSSCOMPILING_EMULATOR.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_EXPORT_COMPILE_COMMANDS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_FRAMEWORK_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_GENERATOR.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_GENERATOR_INSTANCE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_GENERATOR_PLATFORM.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_GENERATOR_TOOLSET.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_INCLUDE_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_INSTALL_MODE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_INSTALL_PREFIX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_LANG_COMPILER_LAUNCHER.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_LANG_IMPLICIT_LINK_DIRECTORIES_EXCLUDE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_LANG_LINKER_LAUNCHER.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_LIBRARY_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_MAXIMUM_RECURSION_DEPTH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_MSVCIDE_RUN_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_NO_VERBOSE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_OSX_ARCHITECTURES.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_PREFIX_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_PROGRAM_PATH.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_TEST_LAUNCHER.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_TLS_VERIFY.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_TLS_VERSION.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CMAKE_TOOLCHAIN_FILE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CSFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CTEST_INTERACTIVE_DEBUG_MODE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CTEST_NO_TESTS_ACTION.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CTEST_OUTPUT_ON_FAILURE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CTEST_PARALLEL_LEVEL.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CTEST_PROGRESS_OUTPUT.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CTEST_USE_LAUNCHERS_DEFAULT.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CUDAARCHS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CUDACXX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CUDAFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CUDAHOSTCXX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CXX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\CXXFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\DASHBOARD_TEST_FROM_CTEST.html
+C:\Program Files\CMake\doc\cmake\html\envvar\DESTDIR.html
+C:\Program Files\CMake\doc\cmake\html\envvar\FC.html
+C:\Program Files\CMake\doc\cmake\html\envvar\FFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\HIPCXX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\HIPFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\HIPHOSTCXX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\ISPC.html
+C:\Program Files\CMake\doc\cmake\html\envvar\ISPCFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\LDFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\MACOSX_DEPLOYMENT_TARGET.html
+C:\Program Files\CMake\doc\cmake\html\envvar\OBJC.html
+C:\Program Files\CMake\doc\cmake\html\envvar\OBJCFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\OBJCXX.html
+C:\Program Files\CMake\doc\cmake\html\envvar\OBJCXXFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\PackageName_ROOT.html
+C:\Program Files\CMake\doc\cmake\html\envvar\RC.html
+C:\Program Files\CMake\doc\cmake\html\envvar\RCFLAGS.html
+C:\Program Files\CMake\doc\cmake\html\envvar\SSL_CERT_DIR.html
+C:\Program Files\CMake\doc\cmake\html\envvar\SSL_CERT_FILE.html
+C:\Program Files\CMake\doc\cmake\html\envvar\SWIFTC.html
+C:\Program Files\CMake\doc\cmake\html\envvar\VERBOSE.html
+C:\Program Files\CMake\doc\cmake\html\generator\Borland Makefiles.html
+C:\Program Files\CMake\doc\cmake\html\generator\CodeBlocks.html
+C:\Program Files\CMake\doc\cmake\html\generator\CodeLite.html
+C:\Program Files\CMake\doc\cmake\html\generator\Eclipse CDT4.html
+C:\Program Files\CMake\doc\cmake\html\generator\Green Hills MULTI.html
+C:\Program Files\CMake\doc\cmake\html\generator\Kate.html
+C:\Program Files\CMake\doc\cmake\html\generator\MinGW Makefiles.html
+C:\Program Files\CMake\doc\cmake\html\generator\MSYS Makefiles.html
+C:\Program Files\CMake\doc\cmake\html\generator\Ninja Multi-Config.html
+C:\Program Files\CMake\doc\cmake\html\generator\Ninja.html
+C:\Program Files\CMake\doc\cmake\html\generator\NMake Makefiles JOM.html
+C:\Program Files\CMake\doc\cmake\html\generator\NMake Makefiles.html
+C:\Program Files\CMake\doc\cmake\html\generator\Sublime Text 2.html
+C:\Program Files\CMake\doc\cmake\html\generator\Unix Makefiles.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 10 2010.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 11 2012.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 12 2013.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 14 2015.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 15 2017.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 16 2019.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 17 2022.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 6.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 7 .NET 2003.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 7.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 8 2005.html
+C:\Program Files\CMake\doc\cmake\html\generator\Visual Studio 9 2008.html
+C:\Program Files\CMake\doc\cmake\html\generator\Watcom WMake.html
+C:\Program Files\CMake\doc\cmake\html\generator\Xcode.html
+C:\Program Files\CMake\doc\cmake\html\guide\ide-integration
+C:\Program Files\CMake\doc\cmake\html\guide\importing-exporting
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial
+C:\Program Files\CMake\doc\cmake\html\guide\user-interaction
+C:\Program Files\CMake\doc\cmake\html\guide\using-dependencies
+C:\Program Files\CMake\doc\cmake\html\guide\ide-integration\index.html
+C:\Program Files\CMake\doc\cmake\html\guide\importing-exporting\index.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\A Basic Starting Point.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding a Custom Command and Generated File.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding a Library.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding Export Configuration.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding Generator Expressions.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding Support for a Testing Dashboard.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding System Introspection.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Adding Usage Requirements for a Library.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\index.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Installing and Testing.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Packaging an Installer.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Packaging Debug and Release.html
+C:\Program Files\CMake\doc\cmake\html\guide\tutorial\Selecting Static or Shared Libraries.html
+C:\Program Files\CMake\doc\cmake\html\guide\user-interaction\index.html
+C:\Program Files\CMake\doc\cmake\html\guide\using-dependencies\index.html
+C:\Program Files\CMake\doc\cmake\html\manual\ccmake.1.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-buildsystem.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-commands.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-compile-features.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-configure-log.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-cxxmodules.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-developer.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-env-variables.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-file-api.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-generator-expressions.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-generators.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-gui.1.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-language.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-modules.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-packages.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-policies.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-presets.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-properties.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-qt.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-server.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-toolchains.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake-variables.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cmake.1.html
+C:\Program Files\CMake\doc\cmake\html\manual\cpack-generators.7.html
+C:\Program Files\CMake\doc\cmake\html\manual\cpack.1.html
+C:\Program Files\CMake\doc\cmake\html\manual\ctest.1.html
+C:\Program Files\CMake\doc\cmake\html\module\AddFileDependencies.html
+C:\Program Files\CMake\doc\cmake\html\module\AndroidTestUtilities.html
+C:\Program Files\CMake\doc\cmake\html\module\BundleUtilities.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCCompilerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCompilerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCSourceCompiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCSourceRuns.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCXXCompilerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCXXSourceCompiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCXXSourceRuns.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckCXXSymbolExists.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckFortranCompilerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckFortranFunctionExists.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckFortranSourceCompiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckFortranSourceRuns.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckFunctionExists.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckIncludeFile.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckIncludeFileCXX.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckIncludeFiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckIPOSupported.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckLanguage.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckLibraryExists.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckLinkerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckOBJCCompilerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckOBJCSourceCompiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckOBJCSourceRuns.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckOBJCXXCompilerFlag.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckOBJCXXSourceCompiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckOBJCXXSourceRuns.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckPIESupported.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckPrototypeDefinition.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckSourceCompiles.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckSourceRuns.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckStructHasMember.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckSymbolExists.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckTypeSize.html
+C:\Program Files\CMake\doc\cmake\html\module\CheckVariableExists.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeAddFortranSubdirectory.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeBackwardCompatibilityCXX.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeDependentOption.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeDetermineVSServicePack.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeExpandImportedTargets.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeFindDependencyMacro.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeFindFrameworks.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeFindPackageMode.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeForceCompiler.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeGraphVizOptions.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakePackageConfigHelpers.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeParseArguments.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakePrintHelpers.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakePrintSystemInformation.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakePushCheckState.html
+C:\Program Files\CMake\doc\cmake\html\module\CMakeVerifyManifest.html
+C:\Program Files\CMake\doc\cmake\html\module\CPack.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackArchive.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackBundle.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackComponent.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackCygwin.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackDeb.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackDMG.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackFreeBSD.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackIFW.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackIFWConfigureFile.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackNSIS.html
+C:\Program Files\CMake\doc\cmake\html\module\CPackNuGet.html
+C:\Program Files\CMake\doc\cmake\
+
+[… truncated 224000 chars …]
