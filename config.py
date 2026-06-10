@@ -22,7 +22,7 @@ OUTPUT_DIR   = "outputs"
 # ─── CLIP V2 配置 ─────────────────────────────────────────────────────────────
 
 # GLM-4.6V-Flash 视觉模型
-GLM_API_KEY           = "your-glm-key-here"   # ← 请填入你的智谱 API Key
+GLM_API_KEY           = "38657a05f7a140c186ad877d9daf4c17.xi05ZYsDVlVLRXIN"   # ← 请填入你的智谱 API Key
 GLM_MODEL             = "glm-4.6v-flash"
 GLM_BASE_URL          = "https://open.bigmodel.cn/api/paas/v4/"
 
