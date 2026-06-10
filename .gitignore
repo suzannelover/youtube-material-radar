@@ -1,6 +1,10 @@
 # 運行時生成目錄
 downloads/
 outputs/
+uploads/
+
+# 工具缓存
+.reasonix/
 
 # Python
 __pycache__/
