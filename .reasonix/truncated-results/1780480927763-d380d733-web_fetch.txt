@@ -1,0 +1,858 @@
+ffmpeg Documentation
+https://ffmpeg.org/ffmpeg.html
+
+<!DOCTYPE html>
+
+ffmpeg Documentation
+
+ffmpeg Documentation
+
+Table of Contents
+
+1 Synopsis
+
+2 Description
+
+3 Detailed description
+
+3.1 Streamcopy
+
+3.2 Transcoding
+
+3.3 Filtering
+
+3.3.1 Simple filtergraphs
+
+3.3.2 Complex filtergraphs
+
+3.4 Loopback decoders
+
+4 Stream selection
+
+4.1 Description
+
+4.1.1 Automatic stream selection
+
+4.1.2 Manual stream selection
+
+4.1.3 Complex filtergraphs
+
+4.1.4 Stream handling
+
+4.2 Examples
+
+5 Options
+
+5.1 Stream specifiers
+
+5.2 Generic options
+
+5.3 AVOptions
+
+5.4 Main options
+
+5.5 Video Options
+
+5.6 Advanced Video options
+
+5.7 Audio Options
+
+5.8 Advanced Audio options
+
+5.9 Subtitle options
+
+5.10 Advanced Subtitle options
+
+5.11 Advanced options
+
+5.12 Preset files
+
+5.12.1 ffpreset files
+
+5.12.2 avpreset files
+
+5.13 vstats file format
+
+6 Examples
+
+6.1 Video and Audio grabbing
+
+6.2 X11 grabbing
+
+6.3 Video and Audio file format conversion
+
+7 See Also
+
+8 Authors
+
+1 Synopsis
+
+ffmpeg [global_options] {[input_file_options] -i input_url} ... {[output_file_options] output_url} ...
+
+2 Description
+
+ffmpeg is a universal media converter. It can read a wide variety of
+inputs - including live grabbing/recording devices - filter, and transcode them
+into a plethora of output formats.
+
+ffmpeg reads from an arbitrary number of inputs (which can be regular
+files, pipes, network streams, grabbing devices, etc.), specified by the
+-i option, and writes to an arbitrary number of outputs, which are
+specified by a plain output url. Anything found on the command line which cannot
+be interpreted as an option is considered to be an output url.
+
+Each input or output can, in principle, contain any number of elementary streams
+of different types (video/audio/subtitle/attachment/data), though the allowed
+stream counts and/or types may be limited by the container format. Selecting
+which streams from which inputs will go into which output is either done
+automatically or with the -map option (see the Stream selection
+chapter).
+
+To refer to inputs/outputs in options, you must use their indices (0-based).
+E.g. the first input is 0, the second is 1, etc. Similarly,
+streams within an input/output are referred to by their indices. E.g. 2:3
+refers to the fourth stream in the third input or output. Also see the
+Stream specifiers chapter.
+
+As a general rule, options are applied to the next specified
+file. Therefore, order is important, and you can have the same
+option on the command line multiple times. Each occurrence is
+then applied to the next input or output file.
+Exceptions from this rule are the global options (e.g. verbosity level),
+which should be specified first.
+
+Do not mix input and output files &ndash; first specify all input files, then all
+output files. Also do not mix options which belong to different files. All
+options apply ONLY to the next input or output file and are reset between files.
+
+Some simple examples follow.
+
+Convert an input media file to a different format, by re-encoding media streams:
+
+ffmpeg -i input.avi output.mp4
+
+Set the video bitrate of the output file to 64 kbit/s:
+
+ffmpeg -i input.avi -b:v 64k -bufsize 64k output.mp4
+
+Force the frame rate of the output file to 24 fps:
+
+ffmpeg -i input.avi -r 24 output.mp4
+
+Force the frame rate of the input file (valid for raw formats only) to 1 fps and
+the frame rate of the output file to 24 fps:
+
+ffmpeg -r 1 -i input.m2v -r 24 output.mp4
+
+The format option may be needed for raw input files.
+
+3 Detailed description
+
+ffmpeg builds a transcoding pipeline out of the components listed
+below. The program&rsquo;s operation then consists of input data chunks flowing from
+the sources down the pipes towards the sinks, while being transformed by the
+components they encounter along the way.
+
+The following kinds of components are available:
+
+Demuxers (short for "demultiplexers") read an input source in order to
+extract
+
+global properties such as metadata or chapters;
+
+list of input elementary streams and their properties
+
+One demuxer instance is created for each -i option, and sends encoded
+packets to decoders or muxers.
+
+In other literature, demuxers are sometimes called splitters, because
+their main function is splitting a file into elementary streams (though some
+files only contain one elementary stream).
+
+A schematic representation of a demuxer looks like this:
+
+┌──────────┬───────────────────────┐
+│ demuxer │ │ packets for stream 0
+╞══════════╡ elementary stream 0 ├──────────────────────►
+│ │ │
+│ global ├───────────────────────┤
+│properties│ │ packets for stream 1
+│ and │ elementary stream 1 ├──────────────────────►
+│ metadata │ │
+│ ├───────────────────────┤
+│ │ │
+│ │ ........... │
+│ │ │
+│ ├───────────────────────┤
+│ │ │ packets for stream N
+│ │ elementary stream N ├──────────────────────►
+│ │ │
+└──────────┴───────────────────────┘
+▲
+│
+│ read from file, network stream,
+│ grabbing device, etc.
+│
+
+Decoders receive encoded (compressed) packets for an audio, video,
+or subtitle elementary stream, and decode them into raw frames (arrays of
+pixels for video, PCM for audio). A decoder is typically associated with (and
+receives its input from) an elementary stream in a demuxer, but sometimes
+may also exist on its own (see Loopback decoders).
+
+A schematic representation of a decoder looks like this:
+
+┌─────────┐
+packets │ │ raw frames
+─────────►│ decoder ├────────────►
+│ │
+└─────────┘
+
+Filtergraphs process and transform raw audio or video frames. A
+filtergraph consists of one or more individual filters linked into a
+graph. Filtergraphs come in two flavors - simple and complex,
+configured with the -filter and -filter_complex options,
+respectively.
+
+A simple filtergraph is associated with an output elementary stream; it
+receives the input to be filtered from a decoder and sends filtered
+output to that output stream&rsquo;s encoder.
+
+A simple video filtergraph that performs deinterlacing (using the yadif
+deinterlacer) followed by resizing (using the scale filter) can look like
+this:
+
+┌────────────────────────┐
+│ simple filtergraph │
+frames from ╞════════════════════════╡ frames for
+a decoder │ ┌───────┐ ┌───────┐ │ an encoder
+────────────►├─►│ yadif ├─►│ scale ├─►│────────────►
+│ └───────┘ └───────┘ │
+└────────────────────────┘
+
+A complex filtergraph is standalone and not associated with any specific stream.
+It may have multiple (or zero) inputs, potentially of different types (audio or
+video), each of which receiving data either from a decoder or another complex
+filtergraph&rsquo;s output. It also has one or more outputs that feed either an
+encoder or another complex filtergraph&rsquo;s input.
+
+The following example diagram represents a complex filtergraph with 3 inputs and
+2 outputs (all video):
+
+┌─────────────────────────────────────────────────┐
+│ complex filtergraph │
+╞═════════════════════════════════════════════════╡
+frames ├───────┐ ┌─────────┐ ┌─────────┐ ┌────────┤ frames
+─────────►│input 0├─►│ overlay ├─────►│ overlay ├─►│output 0├────────►
+├───────┘ │ │ │ │ └────────┤
+frames ├───────┐╭►│ │ ╭►│ │ │
+─────────►│input 1├╯ └─────────┘ │ └─────────┘ │
+├───────┘ │ │
+frames ├───────┐ ┌─────┐ ┌─────┬─╯ ┌────────┤ frames
+─────────►│input 2├►│scale├►│split├───────────────►│output 1├────────►
+├───────┘ └─────┘ └─────┘ └────────┤
+└─────────────────────────────────────────────────┘
+
+Frames from second input are overlaid over those from the first. Frames from the
+third input are rescaled, then the duplicated into two identical streams. One of
+them is overlaid over the combined first two inputs, with the result exposed as
+the filtergraph&rsquo;s first output. The other duplicate ends up being the
+filtergraph&rsquo;s second output.
+
+Encoders receive raw audio, video, or subtitle frames and encode
+them into encoded packets. The encoding (compression) process is
+typically lossy - it degrades stream quality to make the output smaller;
+some encoders are lossless, but at the cost of much higher output size. A
+video or audio encoder receives its input from some filtergraph&rsquo;s output,
+subtitle encoders receive input from a decoder (since subtitle filtering is not
+supported yet). Every encoder is associated with some muxer&rsquo;s output
+elementary stream and sends its output to that muxer.
+
+A schematic representation of an encoder looks like this:
+
+┌─────────┐
+raw frames │ │ packets
+────────────►│ encoder ├─────────►
+│ │
+└─────────┘
+
+Muxers (short for "multiplexers") receive encoded packets for
+their elementary streams from encoders (the transcoding path) or directly
+from demuxers (the streamcopy path), interleave them (when there is more
+than one elementary stream), and write the resulting bytes into the output file
+(or pipe, network stream, etc.).
+
+A schematic representation of a muxer looks like this:
+
+┌──────────────────────┬───────────┐
+packets for stream 0 │ │ muxer │
+──────────────────────►│ elementary stream 0 ╞═══════════╡
+│ │ │
+├──────────────────────┤ global │
+packets for stream 1 │ │properties │
+──────────────────────►│ elementary stream 1 │ and │
+│ │ metadata │
+├──────────────────────┤ │
+│ │ │
+│ ........... │ │
+│ │ │
+├──────────────────────┤ │
+packets for stream N │ │ │
+──────────────────────►│ elementary stream N │ │
+│ │ │
+└──────────────────────┴─────┬─────┘
+│
+write to file, network stream, │
+grabbing device, etc. │
+│
+▼
+
+3.1 Streamcopy
+
+The simplest pipeline in ffmpeg is single-stream
+streamcopy, that is copying one input elementary stream&rsquo;s packets
+without decoding, filtering, or encoding them. As an example, consider an input
+file called INPUT.mkv with 3 elementary streams, from which we take the
+second and write it to file OUTPUT.mp4. A schematic representation of
+such a pipeline looks like this:
+
+┌──────────┬─────────────────────┐
+│ demuxer │ │ unused
+╞══════════╡ elementary stream 0 ├────────╳
+│ │ │
+│INPUT.mkv ├─────────────────────┤ ┌──────────────────────┬───────────┐
+│ │ │ packets │ │ muxer │
+│ │ elementary stream 1 ├─────────►│ elementary stream 0 ╞═══════════╡
+│ │ │ │ │OUTPUT.mp4 │
+│ ├─────────────────────┤ └──────────────────────┴───────────┘
+│ │ │ unused
+│ │ elementary stream 2 ├────────╳
+│ │ │
+└──────────┴─────────────────────┘
+
+The above pipeline can be constructed with the following commandline:
+
+ffmpeg -i INPUT.mkv -map 0:1 -c copy OUTPUT.mp4
+
+In this commandline
+
+there is a single input INPUT.mkv;
+
+there are no input options for this input;
+
+there is a single output OUTPUT.mp4;
+
+there are two output options for this output:
+
+-map 0:1 selects the input stream to be used - from input with index 0
+(i.e. the first one) the stream with index 1 (i.e. the second one);
+
+-c copy selects the copy encoder, i.e. streamcopy with no decoding
+or encoding.
+
+Streamcopy is useful for changing the elementary stream count, container format,
+or modifying container-level metadata. Since there is no decoding or encoding,
+it is very fast and there is no quality loss. However, it might not work in some
+cases because of a variety of factors (e.g. certain information required by the
+target container is not available in the source). Applying filters is obviously
+also impossible, since filters work on decoded frames.
+
+More complex streamcopy scenarios can be constructed - e.g. combining streams
+from two input files into a single output:
+
+┌──────────┬────────────────────┐ ┌────────────────────┬───────────┐
+│ demuxer 0│ │ packets │ │ muxer │
+╞══════════╡elementary stream 0 ├────────►│elementary stream 0 ╞═══════════╡
+│INPUT0.mkv│ │ │ │OUTPUT.mp4 │
+└──────────┴────────────────────┘ ├────────────────────┤ │
+┌──────────┬────────────────────┐ │ │ │
+│ demuxer 1│ │ packets │elementary stream 1 │ │
+╞══════════╡elementary stream 0 ├────────►│ │ │
+│INPUT1.aac│ │ └────────────────────┴───────────┘
+└──────────┴────────────────────┘
+
+that can be built by the commandline
+
+ffmpeg -i INPUT0.mkv -i INPUT1.aac -map 0:0 -map 1:0 -c copy OUTPUT.mp4
+
+The output -map option is used twice here, creating two streams in the
+output file - one fed by the first input and one by the second. The single
+instance of the -c option selects streamcopy for both of those streams.
+You could also use multiple instances of this option together with
+Stream specifiers to apply different values to each stream, as will be
+demonstrated in following sections.
+
+A converse scenario is splitting multiple streams from a single input into
+multiple outputs:
+
+┌──────────┬─────────────────────┐ ┌───────────────────┬───────────┐
+│ demuxer │ │ packets │ │ muxer 0 │
+╞══════════╡ elementary stream 0 ├─────────►│elementary stream 0╞═══════════╡
+│ │ │ │ │OUTPUT0.mp4│
+│INPUT.mkv ├─────────────────────┤ └───────────────────┴───────────┘
+│ │ │ packets ┌───────────────────┬───────────┐
+│ │ elementary stream 1 ├─────────►│ │ muxer 1 │
+│ │ │ │elementary stream 0╞═══════════╡
+└──────────┴─────────────────────┘ │ │OUTPUT1.mp4│
+└───────────────────┴───────────┘
+
+built with
+
+ffmpeg -i INPUT.mkv -map 0:0 -c copy OUTPUT0.mp4 -map 0:1 -c copy OUTPUT1.mp4
+
+Note how a separate instance of the -c option is needed for every
+output file even though their values are the same. This is because non-global
+options (which is most of them) only apply in the context of the file before
+which they are placed.
+
+These examples can of course be further generalized into arbitrary remappings
+of any number of inputs into any number of outputs.
+
+3.2 Transcoding
+
+Transcoding is the process of decoding a stream and then encoding it
+again. Since encoding tends to be computationally expensive and in most cases
+degrades the stream quality (i.e. it is lossy), you should only transcode
+when you need to and perform streamcopy otherwise. Typical reasons to transcode
+are:
+
+applying filters - e.g. resizing, deinterlacing, or overlaying video; resampling
+or mixing audio;
+
+you want to feed the stream to something that cannot decode the original codec.
+
+Note that ffmpeg will transcode all audio, video, and subtitle streams
+unless you specify -c copy for them.
+
+Consider an example pipeline that reads an input file with one audio and one
+video stream, transcodes the video and copies the audio into a single output
+file. This can be schematically represented as follows
+
+┌──────────┬─────────────────────┐
+│ demuxer │ │ audio packets
+╞══════════╡ stream 0 (audio) ├─────────────────────────────────────╮
+│ │ │ │
+│INPUT.mkv ├─────────────────────┤ video ┌─────────┐ raw │
+│ │ │ packets │ video │ video frames │
+│ │ stream 1 (video) ├─────────►│ decoder ├──────────────╮ │
+│ │ │ │ │ │ │
+└──────────┴─────────────────────┘ └─────────┘ │ │
+▼ ▼
+│ │
+┌──────────┬─────────────────────┐ video ┌─────────┐ │ │
+│ muxer │ │ packets │ video │ │ │
+╞══════════╡ stream 0 (video) │◄─────────┤ encoder ├──────────────╯ │
+│ │ │ │(libx264)│ │
+│OUTPUT.mp4├─────────────────────┤ └─────────┘ │
+│ │ │ │
+│ │ stream 1 (audio) │◄────────────────────────────────────╯
+│ │ │
+└──────────┴─────────────────────┘
+
+and implemented with the following commandline:
+
+ffmpeg -i INPUT.mkv -map 0:v -map 0:a -c:v libx264 -c:a copy OUTPUT.mp4
+
+Note how it uses stream specifiers :v and :a to select input
+streams and apply different values of the -c option to them; see the
+Stream specifiers section for more details.
+
+3.3 Filtering
+
+When transcoding, audio and video streams can be filtered before encoding, with
+either a simple or complex filtergraph.
+
+3.3.1 Simple filtergraphs
+
+Simple filtergraphs are those that have exactly one input and output, both of
+the same type (audio or video). They are configured with the per-stream
+-filter option (with -vf and -af aliases for
+-filter:v (video) and -filter:a (audio) respectively). Note
+that simple filtergraphs are tied to their output stream, so e.g. if you have
+multiple audio streams, -af will create a separate filtergraph for each
+one.
+
+Taking the transcoding example from above, adding filtering (and omitting audio,
+for clarity) makes it look like this:
+
+┌──────────┬───────────────┐
+│ demuxer │ │ ┌─────────┐
+╞══════════╡ video stream │ packets │ video │ frames
+│INPUT.mkv │ ├─────────►│ decoder ├─────►───╮
+│ │ │ └─────────┘ │
+└──────────┴───────────────┘ │
+╭───────────◄───────────╯
+│ ┌────────────────────────┐
+│ │ simple filtergraph │
+│ ╞════════════════════════╡
+│ │ ┌───────┐ ┌───────┐ │
+╰──►├─►│ yadif ├─►│ scale ├─►├╮
+│ └───────┘ └───────┘ ││
+└────────────────────────┘│
+│
+│
+┌──────────┬───────────────┐ video ┌─────────┐ │
+│ muxer │ │ packets │ video │ │
+╞══════════╡ video stream │◄─────────┤ encoder ├───────◄───────╯
+│OUTPUT.mp4│ │ │ │
+│ │ │ └─────────┘
+└──────────┴───────────────┘
+
+3.3.2 Complex filtergraphs
+
+Complex filtergraphs are those which cannot be described as simply a linear
+processing chain applied to one stream. This is the case, for example, when the
+graph has more than one input and/or output, or when output stream type is
+different from input. Complex filtergraphs are configured with the
+-filter_complex option. Note that this option is global, since a
+complex filtergraph, by its nature, cannot be unambiguously associated with a
+single stream or file. Each instance of -filter_complex creates a new
+complex filtergraph, and there can be any number of them.
+
+A trivial example of a complex filtergraph is the overlay filter, which
+has two video inputs and one video output, containing one video overlaid on top
+of the other. Its audio counterpart is the amix filter.
+
+3.4 Loopback decoders
+
+While decoders are normally associated with demuxer streams, it is also possible
+to create "loopback" decoders that decode the output from some encoder and allow
+it to be fed back to complex filtergraphs. This is done with the -dec
+directive, which takes as a parameter the index of the output stream that should
+be decoded. Every such directive creates a new loopback decoder, indexed with
+successive integers starting at zero. These indices should then be used to refer
+to loopback decoders in complex filtergraph link labels, as described in the
+documentation for -filter_complex.
+
+Decoding AVOptions can be passed to loopback decoders by placing them before
+-dec, analogously to input/output options.
+
+E.g. the following example:
+
+ffmpeg -i INPUT \
+-map 0:v:0 -c:v libx264 -crf 45 -f null - \
+-threads 3 -dec 0:0 \
+-filter_complex '[0:v][dec:0]hstack[stack]' \
+-map '[stack]' -c:v ffv1 OUTPUT
+
+reads an input video and
+
+(line 2) encodes it with libx264 at low quality;
+
+(line 3) decodes this encoded stream using 3 threads;
+
+(line 4) places decoded video side by side with the original input video;
+
+(line 5) combined video is then losslessly encoded and written into
+OUTPUT.
+
+Such a transcoding pipeline can be represented with the following diagram:
+
+┌──────────┬───────────────┐
+│ demuxer │ │ ┌─────────┐ ┌─────────┐ ┌────────────────────┐
+╞══════════╡ video stream │ │ video │ │ video │ │ null muxer │
+│ INPUT │ ├──►│ decoder ├──┬────────►│ encoder ├─┬─►│(discards its input)│
+│ │ │ └─────────┘ │ │(libx264)│ │ └────────────────────┘
+└──────────┴───────────────┘ │ └─────────┘ │
+╭───────◄──╯ ┌─────────┐ │
+│ │loopback │ │
+│ ╭─────◄──────┤ decoder ├────◄──╯
+│ │ └─────────┘
+│ │
+│ │
+│ │ ┌───────────────────┐
+│ │ │complex filtergraph│
+│ │ ╞═══════════════════╡
+│ │ │ ┌─────────────┐ │
+╰─╫─►├─►│ hstack ├─►├╮
+╰─►├─►│ │ ││
+│ └─────────────┘ ││
+└───────────────────┘│
+│
+┌──────────┬───────────────┐ ┌─────────┐ │
+│ muxer │ │ │ video │ │
+╞══════════╡ video stream │◄─┤ encoder ├───────◄──────────╯
+│ OUTPUT │ │ │ (ffv1) │
+│ │ │ └─────────┘
+└──────────┴───────────────┘
+
+4 Stream selection
+
+ffmpeg provides the -map option for manual control of stream selection in each
+output file. Users can skip -map and let ffmpeg perform automatic stream selection as
+described below. The -vn / -an / -sn / -dn options can be used to skip inclusion of
+video, audio, subtitle and data streams respectively, whether manually mapped or automatically
+selected, except for those streams which are outputs of complex filtergraphs.
+
+4.1 Description
+
+The sub-sections that follow describe the various rules that are involved in stream selection.
+The examples that follow next show how these rules are applied in practice.
+
+While every effort is made to accurately reflect the behavior of the program, FFmpeg is under
+continuous development and the code may have changed since the time of this writing.
+
+4.1.1 Automatic stream selection
+
+In the absence of any map options for a particular output file, ffmpeg inspects the output
+format to check which type of streams can be included in it, viz. video, audio and/or
+subtitles. For each acceptable stream type, ffmpeg will pick one stream, when available,
+from among all the inputs.
+
+It will select that stream based upon the following criteria:
+
+for video, it is the stream with the highest resolution,
+
+for audio, it is the stream with the most channels,
+
+for subtitles, it is the first subtitle stream found but there&rsquo;s a caveat.
+The output format&rsquo;s default subtitle encoder can be either text-based or image-based,
+and only a subtitle stream of the same type will be chosen.
+
+In the case where several streams of the same type rate equally, the stream with the lowest
+index is chosen.
+
+Data or attachment streams are not automatically selected and can only be included
+using -map.
+
+4.1.2 Manual stream selection
+
+When -map is used, only user-mapped streams are included in that output file,
+with one possible exception for filtergraph outputs described below.
+
+4.1.3 Complex filtergraphs
+
+If there are any complex filtergraph output streams with unlabeled pads, they will be added
+to the first output file. This will lead to a fatal error if the stream type is not supported
+by the output format. In the absence of the map option, the inclusion of these streams leads
+to the automatic stream selection of their types being skipped. If map options are present,
+these filtergraph streams are included in addition to the mapped streams.
+
+Complex filtergraph output streams with labeled pads must be mapped once and exactly once.
+
+4.1.4 Stream handling
+
+Stream handling is independent of stream selection, with an exception for subtitles described
+below. Stream handling is set via the -codec option addressed to streams within a
+specific output file. In particular, codec options are applied by ffmpeg after the
+stream selection process and thus do not influence the latter. If no -codec option is
+specified for a stream type, ffmpeg will select the default encoder registered by the output
+file muxer.
+
+An exception exists for subtitles. If a subtitle encoder is specified for an output file, the
+first subtitle stream found of any type, text or image, will be included. ffmpeg does not validate
+if the specified encoder can convert the selected stream or if the converted stream is acceptable
+within the output format. This applies generally as well: when the user sets an encoder manually,
+the stream selection process cannot check if the encoded stream can be muxed into the output file.
+If it cannot, ffmpeg will abort and all output files will fail to be processed.
+
+4.2 Examples
+
+The following examples illustrate the behavior, quirks and limitations of ffmpeg&rsquo;s stream
+selection methods.
+
+They assume the following three input files.
+
+input file 'A.avi'
+stream 0: video 640x360
+stream 1: audio 2 channels
+
+input file 'B.mp4'
+stream 0: video 1920x1080
+stream 1: audio 2 channels
+stream 2: subtitles (text)
+stream 3: audio 5.1 channels
+stream 4: subtitles (text)
+
+input file 'C.mkv'
+stream 0: video 1280x720
+stream 1: audio 2 channels
+stream 2: subtitles (image)
+
+Example: automatic stream selection
+
+ffmpeg -i A.avi -i B.mp4 out1.mkv out2.wav -map 1:a -c:a copy out3.mov
+
+There are three output files specified, and for the first two, no -map options
+are set, so ffmpeg will select streams for these two files automatically.
+
+out1.mkv is a Matroska container file and accepts video, audio and subtitle streams,
+so ffmpeg will try to select one of each type.
+
+For video, it will select stream 0 from B.mp4, which has the highest
+resolution among all the input video streams.
+
+For audio, it will select stream 3 from B.mp4, since it has the greatest
+number of channels.
+
+For subtitles, it will select stream 2 from B.mp4, which is the first subtitle
+stream from among A.avi and B.mp4.
+
+out2.wav accepts only audio streams, so only stream 3 from B.mp4 is
+selected.
+
+For out3.mov, since a -map option is set, no automatic stream selection will
+occur. The -map 1:a option will select all audio streams from the second input
+B.mp4. No other streams will be included in this output file.
+
+For the first two outputs, all included streams will be transcoded. The encoders chosen will
+be the default ones registered by each output format, which may not match the codec of the
+selected input streams.
+
+For the third output, codec option for audio streams has been set
+to copy, so no decoding-filtering-encoding operations will occur, or can occur.
+Packets of selected streams shall be conveyed from the input file and muxed within the output
+file.
+
+Example: automatic subtitles selection
+
+ffmpeg -i C.mkv out1.mkv -c:s dvdsub -an out2.mkv
+
+Although out1.mkv is a Matroska container file which accepts subtitle streams, only a
+video and audio stream shall be selected. The subtitle stream of C.mkv is image-based
+and the default subtitle encoder of the Matroska muxer is text-based, so a transcode operation
+for the subtitles is expected to fail and hence the stream isn&rsquo;t selected. However, in
+out2.mkv, a subtitle encoder is specified in the command and so, the subtitle stream is
+selected, in addition to the video stream. The presence of -an disables audio stream
+selection for out2.mkv.
+
+Example: unlabeled filtergraph outputs
+
+ffmpeg -i A.avi -i C.mkv -i B.mp4 -filter_complex "overlay" out1.mp4 out2.srt
+
+A filtergraph is setup here using the -filter_complex option and consists of a single
+video filter. The overlay filter requires exactly two video inputs, but none are
+specified, so the first two available video streams are used, those of A.avi and
+C.mkv. The output pad of the filter has no label and so is sent to the first output file
+out1.mp4. Due to this, automatic selection of the video stream is skipped, which would
+have selected the stream in B.mp4. The audio stream with most channels viz. stream 3
+in B.mp4, is chosen automatically. No subtitle stream is chosen however, since the MP4
+format has no default subtitle encoder registered, and the user hasn&rsquo;t specified a subtitle encoder.
+
+The 2nd output file, out2.srt, only accepts text-based subtitle streams. So, even though
+the first subtitle stream available belongs to C.mkv, it is image-based and hence skipped.
+The selected stream, stream 2 in B.mp4, is the first text-based subtitle stream.
+
+Example: labeled filtergraph outputs
+
+ffmpeg -i A.avi -i B.mp4 -i C.mkv -filter_complex "[1:v]hue=s=0[outv];overlay;aresample" \
+-map '[outv]' -an out1.mp4 \
+out2.mkv \
+-map '[outv]' -map 1:a:0 out3.mkv
+
+The above command will fail, as the output pad labelled [outv] has been mapped twice.
+None of the output files shall be processed.
+
+ffmpeg -i A.avi -i B.mp4 -i C.mkv -filter_complex "[1:v]hue=s=0[outv];overlay;aresample" \
+-an out1.mp4 \
+out2.mkv \
+-map 1:a:0 out3.mkv
+
+This command above will also fail as the hue filter output has a label, [outv],
+and hasn&rsquo;t been mapped anywhere.
+
+The command should be modified as follows,
+
+ffmpeg -i A.avi -i B.mp4 -i C.mkv -filter_complex "[1:v]hue=s=0,split=2[outv1][outv2];overlay;aresample" \
+-map '[outv1]' -an out1.mp4 \
+out2.mkv \
+-map '[outv2]' -map 1:a:0 out3.mkv
+
+The video stream from B.mp4 is sent to the hue filter, whose output is cloned once using
+the split filter, and both outputs labelled. Then a copy each is mapped to the first and third
+output files.
+
+The overlay filter, requiring two video inputs, uses the first two unused video streams. Those
+are the streams from A.avi and C.mkv. The overlay output isn&rsquo;t labelled, so it is
+sent to the first output file out1.mp4, regardless of the presence of the -map option.
+
+The aresample filter is sent the first unused audio stream, that of A.avi. Since this filter
+output is also unlabelled, it too is mapped to the first output file. The presence of -an
+only suppresses automatic or manual stream selection of audio streams, not outputs sent from
+filtergraphs. Both these mapped streams shall be ordered before the mapped stream in out1.mp4.
+
+The video, audio and subtitle streams mapped to out2.mkv are entirely determined by
+automatic stream selection.
+
+out3.mkv consists of the cloned video output from the hue filter and the first audio
+stream from B.mp4.
+
+5 Options
+
+All the numerical options, if not specified otherwise, accept a string
+representing a number as input, which may be followed by one of the SI
+unit prefixes, for example: &rsquo;K&rsquo;, &rsquo;M&rsquo;, or &rsquo;G&rsquo;.
+
+If &rsquo;i&rsquo; is appended to the SI unit prefix, the complete prefix will be
+interpreted as a unit prefix for binary multiples, which are based on
+powers of 1024 instead of powers of 1000. Appending &rsquo;B&rsquo; to the SI unit
+prefix multiplies the value by 8. This allows using, for example:
+&rsquo;KB&rsquo;, &rsquo;MiB&rsquo;, &rsquo;G&rsquo; and &rsquo;B&rsquo; as number suffixes.
+
+Options which do not take arguments are boolean options, and set the
+corresponding value to true. They can be set to false by prefixing
+the option name with "no". For example using "-nofoo"
+will set the boolean option with name "foo" to false.
+
+Options that take arguments support a special syntax where the argument given on
+the command line is interpreted as a path to the file from which the actual
+argument value is loaded. To use this feature, add a forward slash &rsquo;/&rsquo;
+immediately before the option name (after the leading dash). E.g.
+
+ffmpeg -i INPUT -/filter:v filter.script OUTPUT
+
+will load a filtergraph description from the file named filter.script.
+
+5.1 Stream specifiers
+
+Some options are applied per-stream, e.g. bitrate or codec. Stream specifiers
+are used to precisely specify which stream(s) a given option belongs to.
+
+A stream specifier is a string generally appended to the option name and
+separated from it by a colon. E.g. -codec:a:1 ac3 contains the
+a:1 stream specifier, which matches the second audio stream. Therefore, it
+would select the ac3 codec for the second audio stream.
+
+A stream specifier can match several streams, so that the option is applied to all
+of them. E.g. the stream specifier in -b:a 128k matches all audio
+streams.
+
+An empty stream specifier matches all streams. For example, -codec copy
+or -codec: copy would copy all the streams without reencoding.
+
+Possible forms of stream specifiers are:
+
+stream_index
+
+Matches the stream with this index. E.g. -threads:1 4 would set the
+thread count for the second stream to 4. If stream_index is used as an
+additional stream specifier (see below), then it selects stream number
+stream_index from the matching streams. Stream numbering is based on the
+order of the streams as detected by libavformat except when a stream group
+specifier or program ID is also specified. In this case it is based on the
+ordering of the streams in the group or program.
+
+stream_type[:additional_stream_specifier]
+
+stream_type is one of following: &rsquo;v&rsquo; or &rsquo;V&rsquo; for video, &rsquo;a&rsquo; for audio, &rsquo;s&rsquo;
+for subtitle, &rsquo;d&rsquo; for data, and &rsquo;t&rsquo; for attachments. &rsquo;v&rsquo; matches all video
+streams, &rsquo;V&rsquo; only matches video streams which are not attached pictures, video
+thumbnails or cover arts. If additional_stream_specifier is used, then
+it matches streams which both have this type and match the
+additional_stream_specifier. Otherwise, it matches all streams of the
+specified type.
+
+g:group_specifier[:additional_stream_specifier]
+
+Matches streams which are in the group with the specifier group_specifier.
+if additional_stream_specifier is used, then it matches streams which both
+are part of the group and match the additional_stream_specifier.
+group_specifier may be one of the following:
+
+group_index
+
+Match the stream with this group index.
+
+#group_id or i:gr
+
+[… truncated 98807 chars …]

@@ -615,6 +615,115 @@
   }
   .caption-copy:hover { border-color: var(--accent); color: var(--accent); }
   .caption-copy.copied { border-color: var(--accent); color: var(--accent); background: rgba(232,255,71,.08); }
+
+  /* ═══════════════════ V2 上传剪辑 专属样式 ═══════════════════ */
+
+  /* 视频上传拖拽区 */
+  .video-drop-zone {
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 28px 20px;
+    transition: background .2s;
+    position: relative;
+  }
+  .video-drop-zone:hover { background: rgba(255,255,255,.02); }
+  .video-drop-zone.drag-over {
+    background: rgba(232,255,71,.04);
+    border-color: var(--accent);
+  }
+  .video-drop-zone.has-file {
+    border-color: var(--accent);
+    background: rgba(232,255,71,.04);
+  }
+  .video-drop-icon {
+    color: var(--muted);
+    transition: color .2s;
+  }
+  .video-drop-zone.has-file .video-drop-icon { color: var(--accent); }
+  .video-drop-text {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.7;
+    font-family: 'Space Mono', monospace;
+  }
+  .video-drop-zone.has-file .video-drop-text { color: var(--text); }
+  .video-file-meta {
+    font-size: 11px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    display: none;
+  }
+  .video-drop-zone.has-file .video-file-meta { display: block; }
+  #videoFileInput { display: none; }
+
+  /* 下载按钮 */
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 24px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .download-btn:hover {
+    background: rgba(232,255,71,.10);
+    transform: scale(1.02);
+  }
+
+  /* V2 剪辑结果卡片 */
+  .clipv2-result {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    animation: slideIn .3s ease both;
+  }
+  .clipv2-result-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .clipv2-result-filename {
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .clipv2-result-meta {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 8px;
+  }
+  .clipv2-result-reason {
+    font-size: 13px;
+    line-height: 1.7;
+    color: #a0a0b8;
+    margin-bottom: 16px;
+  }
+  .clipv2-result-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 </style>
 </head>
 <body>
@@ -630,6 +739,7 @@
   <button class="tab-btn active" onclick="switchTab('search')">▸ RADAR 素材搜索</button>
   <button class="tab-btn" onclick="switchTab('copy')">▸ COPY 文案生成</button>
   <button class="tab-btn" onclick="switchTab('clip')">▸ CLIP 智能剪辑</button>
+  <button class="tab-btn" onclick="switchTab('clipv2')">▸ CLIP V2 上传剪辑</button>
 </div>
 
 <!-- ══════════════════════════════════════
@@ -754,6 +864,62 @@
 
   <!-- 结果区 -->
   <div id="clip-results"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     CLIP V2 上传剪辑（新增）
+══════════════════════════════════════ -->
+<div id="panel-clipv2" class="panel">
+
+  <!-- 视频上传区 -->
+  <div class="search-box" id="videoUploadBox">
+    <div class="video-drop-zone" id="videoDropZone" onclick="document.getElementById('videoFileInput').click()">
+      <svg class="video-drop-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <div class="video-drop-text">點擊或拖拽上傳<br>.mp4 / .mov / .avi / .webm<br><br>最大 200MB</div>
+      <div class="video-file-meta" id="videoFileMeta">—</div>
+    </div>
+    <input type="file" id="videoFileInput" accept=".mp4,.mov,.avi,.webm">
+    <div class="search-footer">
+      <span class="hint">📁 支援格式：MP4 / MOV / AVI / WebM</span>
+    </div>
+  </div>
+
+  <!-- 剪辑描述 -->
+  <div class="search-box" style="margin-top:16px;">
+    <textarea id="clipv2Description" rows="3"
+      placeholder="描述你想找的片段點位，例如：找官員被追問支支吾吾的那段、主持人質問來賓的精彩辯論、影片中最感人的瞬間..."></textarea>
+    <div class="search-footer">
+      <span class="hint">描述越具體，定位越精確</span>
+    </div>
+  </div>
+
+  <!-- 时长选择 -->
+  <div class="filter-bar">
+    <span class="filter-label">TARGET</span>
+    <div class="filter-options">
+      <button class="filter-btn" data-dur="15" onclick="setClipDuration(this)">15s</button>
+      <button class="filter-btn active" data-dur="20" onclick="setClipDuration(this)">20s</button>
+      <button class="filter-btn" data-dur="25" onclick="setClipDuration(this)">25s</button>
+      <button class="filter-btn" data-dur="30" onclick="setClipDuration(this)">30s</button>
+    </div>
+  </div>
+
+  <!-- 提交行 -->
+  <div class="copy-action" style="max-width:720px;margin:0 auto 32px;">
+    <span class="copy-hint">AI 視覺模型分析畫面 + 智能剪輯</span>
+    <button id="clipv2Btn" onclick="doClipV2()">分析 →</button>
+  </div>
+
+  <!-- 状态提示 -->
+  <div id="clipv2-status"></div>
+
+  <!-- 结果区 -->
+  <div id="clipv2-results"></div>
 
 </div>
 
@@ -1216,6 +1382,146 @@ function copyClipUrl(videoId, startSec) {
   navigator.clipboard.writeText(url).then(() => {
     alert('✓ 連結已複製到剪貼板');
   });
+}
+
+// ══════════════════════════════════════════
+//  CLIP V2 上传剪辑（新增）
+// ══════════════════════════════════════════
+
+let selectedClipDuration = 20;
+let selectedVideoFile = null;
+
+function setClipDuration(btn) {
+  document.querySelectorAll('#panel-clipv2 .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedClipDuration = parseInt(btn.dataset.dur);
+}
+
+// ── 视频拖拽上传 ──
+
+const videoDropZone = document.getElementById('videoDropZone');
+const videoFileInput = document.getElementById('videoFileInput');
+const videoFileMeta = document.getElementById('videoFileMeta');
+const videoUploadBox = document.getElementById('videoUploadBox');
+
+videoDropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  videoDropZone.classList.add('drag-over');
+});
+
+videoDropZone.addEventListener('dragleave', () => {
+  videoDropZone.classList.remove('drag-over');
+});
+
+videoDropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  videoDropZone.classList.remove('drag-over');
+  const files = e.dataTransfer.files;
+  if (files.length > 0) handleVideoFile(files[0]);
+});
+
+videoFileInput.addEventListener('change', () => {
+  if (videoFileInput.files.length > 0) handleVideoFile(videoFileInput.files[0]);
+});
+
+function handleVideoFile(file) {
+  const allowed = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm'];
+  if (!allowed.includes(file.type)) {
+    alert('⚠ 不支援的影片格式，請上傳 mp4 / mov / avi / webm');
+    return;
+  }
+  if (file.size > 200 * 1024 * 1024) {
+    alert('⚠ 檔案過大，上限 200MB');
+    return;
+  }
+  selectedVideoFile = file;
+  videoDropZone.classList.add('has-file');
+  videoFileMeta.textContent = `${file.name}  (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+  videoUploadBox.style.borderColor = 'var(--accent)';
+}
+
+// ── 提交剪辑 ──
+
+async function doClipV2() {
+  if (!selectedVideoFile) {
+    alert('請先上傳影片檔案');
+    return;
+  }
+  const description = document.getElementById('clipv2Description').value.trim();
+  if (!description) {
+    alert('請輸入剪輯描述');
+    return;
+  }
+
+  const btn     = document.getElementById('clipv2Btn');
+  const status  = document.getElementById('clipv2-status');
+  const results = document.getElementById('clipv2-results');
+
+  btn.disabled = true;
+  btn.textContent = '處理中...';
+  results.innerHTML = '';
+  status.innerHTML = '<div class="loader"><span></span><span></span><span></span></div>';
+
+  try {
+    const formData = new FormData();
+    formData.append('video', selectedVideoFile);
+    formData.append('description', description);
+    formData.append('duration', selectedClipDuration);
+
+    const res = await fetch('/api/clip_v2', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      results.innerHTML = `<div class="error-msg">⚠ ${data.error || '剪辑失败'}</div>`;
+      status.innerHTML = '';
+      return;
+    }
+
+    status.innerHTML = '';
+    renderClipV2Result(data);
+
+  } catch (e) {
+    results.innerHTML = `<div class="error-msg">⚠ 网络错误：${e.message}</div>`;
+    status.innerHTML = '';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '分析 →';
+  }
+}
+
+function renderClipV2Result(data) {
+  const results = document.getElementById('clipv2-results');
+  results.innerHTML = `
+    <div class="clipv2-result">
+      <div class="clipv2-result-title">✂ 剪辑完成</div>
+      <div class="clipv2-result-filename">${escHtml(data.filename)}</div>
+      <div class="clipv2-result-meta">
+        ${escHtml(data.start_fmt || secToTimestamp(data.start_sec))} → ${escHtml(data.end_fmt || secToTimestamp(data.end_sec))}
+        &nbsp;│&nbsp; 共 ${data.duration}s
+      </div>
+      <div class="clipv2-result-reason">📍 ${escHtml(data.reason)}</div>
+      <div class="clipv2-result-actions">
+        <a class="download-btn" href="${data.download_url}" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          下載影片
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function secToTimestamp(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${String(s).padStart(2, '0')}`;
 }
 </script>
 </body>

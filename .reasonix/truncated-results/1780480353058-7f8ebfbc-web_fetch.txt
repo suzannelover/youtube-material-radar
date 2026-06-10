@@ -1,0 +1,232 @@
+https://docs.bigmodel.cn/llms.txt
+
+# 智谱AI开放文档
+
+> Z智谱开放平台开发者文档中心
+
+## Docs
+
+- [对话历史](https://docs.bigmodel.cn/api-reference/agent-api/对话历史.md): 查询智能体对话历史，现仅支持 `slides_glm_agent` 智能体
+- [异步结果](https://docs.bigmodel.cn/api-reference/agent-api/异步结果.md): 查询智能体异步任务的处理结果和状态。
+- [智能体对话](https://docs.bigmodel.cn/api-reference/agent-api/智能体对话.md): 与智能体进行对话交互。支持同步和流式调用，提供智能体的专业能力。见 [智能体文档](/cn/guide/agents/translation)
+- [问答 Agent 对话（流式）](https://docs.bigmodel.cn/api-reference/agent-api/问答-agent-对话（流式）.md): 基于 ReAct（Reasoning + Acting）推理引擎的流式对话接口。LLM 会根据用户问题自主决定是否调用工具（知识检索、查询重写等），并通过 SSE 实时推送思考过程、工具调用和最终回答。
+- [助手会话列表](https://docs.bigmodel.cn/api-reference/助理-api/助手会话列表.md): 查询指定智能体助手的会话列表，支持分页查询。
+- [助手列表](https://docs.bigmodel.cn/api-reference/助理-api/助手列表.md): 查询指定的智能体助手列表信息，包括智能体助手的详细配置、工具和元数据。
+- [助手对话](https://docs.bigmodel.cn/api-reference/助理-api/助手对话.md): 与`AI`助手进行对话，支持流式和同步模式。
+- [OCR 服务](https://docs.bigmodel.cn/api-reference/工具-api/ocr-服务.md): 上传图片文件，使用指定工具类型进行 OCR（光学字符识别），支持手写体、文字等识别模式，见 [OCR 服务](/cn/guide/tools/zhipu-ocr)
+- [内容安全](https://docs.bigmodel.cn/api-reference/工具-api/内容安全.md): 可对文本、图片、音频、视频格式类型的内容进行检测，精准识别涉黄、涉暴、违法违规等风险内容，并输出结构化审核结果（包括内容类型、风险类型及具体风险内容片段），快速定位和处理违规信息。
+- [文件解析](https://docs.bigmodel.cn/api-reference/工具-api/文件解析.md): 创建文件解析任务，支持多种文件格式和解析工具。见 [文件解析服务](/cn/guide/tools/file-parser)
+- [文件解析(同步)](https://docs.bigmodel.cn/api-reference/工具-api/文件解析同步.md): 创建文件解析任务，支持多种文件格式和解析工具。见 [文件解析服务](/cn/guide/tools/file-parser)
+- [网络搜索](https://docs.bigmodel.cn/api-reference/工具-api/网络搜索.md): `Web Search API` 是一个专给大模型用的搜索引擎，在传统搜索引擎网页读取、排序的能力基础上，增强了意图识别能力，返回更适合大模型处理的结果（网页标题、`URL`、摘要、名称、图标等）。支持意图增强检索、结构化输出和多引擎支持。见 [网络搜索服务](/cn/guide/tools/web-search)
+- [网页阅读](https://docs.bigmodel.cn/api-reference/工具-api/网页阅读.md): 读取并解析指定 `URL` 的网页内容，可选择返回格式、支持控制缓存、图片保留与摘要选项等。
+- [解析结果](https://docs.bigmodel.cn/api-reference/工具-api/解析结果.md): 异步获取文件解析任务的结果，支持返回纯文本或下载链接格式。见 [文件解析服务](/cn/guide/tools/file-parser)
+- [列出批处理任务](https://docs.bigmodel.cn/api-reference/批处理-api/列出批处理任务.md): 获取批量处理任务列表，支持分页。见 [批量服务](/cn/guide/tools/batch)
+- [创建批处理任务](https://docs.bigmodel.cn/api-reference/批处理-api/创建批处理任务.md): 创建一个新的批量处理任务。见 [批量服务](/cn/guide/tools/batch)
+- [取消批处理任务](https://docs.bigmodel.cn/api-reference/批处理-api/取消批处理任务.md): 根据批处理任务`ID`取消正在运行的批量处理任务。见 [批量服务](/cn/guide/tools/batch)
+- [检索批处理任务](https://docs.bigmodel.cn/api-reference/批处理-api/检索批处理任务.md): 根据批处理任务`ID`获取批量处理任务详情。见 [批量服务](/cn/guide/tools/batch)
+- [上传文件](https://docs.bigmodel.cn/api-reference/文件-api/上传文件.md): 上传用于 `Batch 任务`、`智能体` 等功能的文件。注意 `Try it` 功能仅支持小文件上传，实际支持的文件大小请参见下文 `purpose` 相关说明。
+- [删除文件](https://docs.bigmodel.cn/api-reference/文件-api/删除文件.md): 永久删除指定文件及其所有关联数据。
+- [文件内容](https://docs.bigmodel.cn/api-reference/文件-api/文件内容.md): 获取文件内容。只支持 `batch` 文件类型。
+- [文件列表](https://docs.bigmodel.cn/api-reference/文件-api/文件列表.md): 获取已上传文件的分页列表，支持按用途和排序过滤。
+- [创建新会话](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/创建新会话.md): 为指定智能体（应用）创建新会话，返回会话`ID`。
+- [推理接口](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/推理接口.md): 对话型或文本型应用推理接口，支持同步和流式`SSE`调用。
+- [推荐问题接口](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/推荐问题接口.md): 获取推荐问题列表。
+- [文件上传](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/文件上传.md): 上传文件到智能体（应用），同步返回上传结果。需通过文件解析状态接口获取解析结果。
+- [知识库切片引用位置信息](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/知识库切片引用位置信息.md): 获取知识库切片引用的位置信息。
+- [获取文件解析状态](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/获取文件解析状态.md): 获取指定文件的解析状态。
+- [获取智能体输入参数](https://docs.bigmodel.cn/api-reference/智能体-api（旧）/获取智能体输入参数.md): 获取指定智能体应用的输入参数列表。
+- [删除音色](https://docs.bigmodel.cn/api-reference/模型-api/删除音色.md): 删除指定的音色。
+- [图像生成](https://docs.bigmodel.cn/api-reference/模型-api/图像生成.md): 使用 [GLM-Image](/cn/guide/models/image-generation/glm-image) 等系列模型从文本提示生成高质量图像。通过对用户文字描述快速、精准的理解，让 `AI` 的图像表达更加精确和个性化。
+- [图像生成(异步)](https://docs.bigmodel.cn/api-reference/模型-api/图像生成异步.md): 使用 [GLM-Image](/cn/guide/models/image-generation/glm-image) 系列模型从文本提示生成高质量图像。通过对用户文字描述快速、精准的理解，让 `AI` 的图像表达更加精确和个性化。仅支持 `GLM-Image` 模型。
+- [对话补全](https://docs.bigmodel.cn/api-reference/模型-api/对话补全.md): 和 [指定模型](/cn/guide/start/model-overview) 对话，模型根据请求给出响应。支持多种模型，支持多模态（文本、图片、音频、视频、文件），流式和非流式输出，可配置采样，温度，最大令牌数，工具调用等。
+- [对话补全(异步)](https://docs.bigmodel.cn/api-reference/模型-api/对话补全异步.md): 和 [指定模型](/cn/guide/start/model-overview) 对话，通过查询异步结果获取模型响应。支持多种模型，支持多模态（文本、图片、音频、视频、文件），可配置采样，温度，最大令牌数，工具调用等。注意此为异步接口，通过 [查询异步结果](/api-reference/%E6%A8%A1%E5%9E%8B-api/%E6%9F%A5%E8%AF%A2%E5%BC%82%E6%AD%A5%E7%BB%93%E6%9E%9C) 获取生成结果。
+- [文本分词器](https://docs.bigmodel.cn/api-reference/模型-api/文本分词器.md): `Tokenizer` 用于将文本切分为模型可识别的 `token` 并计算数量。它接收用户输入的文本，通过模型进行分词处理，最终返回对应的 `token` 数量。适用于文本长度评估、模型输入预估、对话上下文截断、费用计算等。
+- [文本嵌入](https://docs.bigmodel.cn/api-reference/模型-api/文本嵌入.md): 使用 [GLM Embedding](/cn/guide/models/embedding/embedding-3) 系列模型将文本转换为高维向量表示，用于语义相似性和搜索。
+- [文本转语音](https://docs.bigmodel.cn/api-reference/模型-api/文本转语音.md): 使用 `GLM-TTS` 将文本转换为自然语音，支持多种声音、情感控制和语调调整。
+- [文本重排序](https://docs.bigmodel.cn/api-reference/模型-api/文本重排序.md): `Rerank` 用于文本重排序，通过接收用户的查询文本及候选文本列表，使用模型计算候选文本与查询文本的相关性得分并返回分数。适用于智能问答、信息检索等场景。
+- [文档解析](https://docs.bigmodel.cn/api-reference/模型-api/文档解析.md): 使用 [GLM-OCR](/cn/guide/models/vlm/glm-ocr) 模型解析文档和图片的布局并提取文本内容。支持图片和`PDF`文档的`OCR`识别，返回详细的布局信息和可视化结果。
+- [查询异步结果](https://docs.bigmodel.cn/api-reference/模型-api/查询异步结果.md): 查询对话补全和视频生成异步请求的处理结果和状态。
+- [视频生成(异步)](https://docs.bigmodel.cn/api-reference/模型-api/视频生成异步.md): 通过调用 [视频模型](/cn/guide/models/video-generation/cogvideox-3) 能力生成视频内容。支持多种视频生成方式，包括文本转视频、图像转视频等。注意此为异步接口，通过 [查询异步结果](/api-reference/%E6%A8%A1%E5%9E%8B-api/%E6%9F%A5%E8%AF%A2%E5%BC%82%E6%AD%A5%E7%BB%93%E6%9E%9C) 获取生成视频结果。
+- [语音转文本](https://docs.bigmodel.cn/api-reference/模型-api/语音转文本.md): 使用 [GLM-ASR-2512](/cn/guide/models/sound-and-video/glm-asr-2512) 模型将音频文件转录为文本，支持多语言和实时流式转录。
+- [音色列表](https://docs.bigmodel.cn/api-reference/模型-api/音色列表.md): 获取音色列表，支持按音色名称模糊搜索、按音色类型过滤。
+- [音色复刻](https://docs.bigmodel.cn/api-reference/模型-api/音色复刻.md): 使用音色复刻技术，基于示例音频生成指定音色、文本内容的语音合成。
+- [上传URL文档](https://docs.bigmodel.cn/api-reference/知识库-api/上传url文档.md): 上传`URL`类型的文档或网页作为内容填充知识库。
+- [上传文件文档](https://docs.bigmodel.cn/api-reference/知识库-api/上传文件文档.md): 向指定知识库上传文件类型文档，支持多种切片方式和回调。
+- [全模态知识库检索](https://docs.bigmodel.cn/api-reference/知识库-api/全模态知识库检索.md): 用于检索全模态知识库，支持文本、图片、视频等多模态输入检索，支持向量检索、关键词检索、混合检索，支持查询重写、重排、QA干预等高级功能。
+- [创建知识库](https://docs.bigmodel.cn/api-reference/知识库-api/创建知识库.md): 用于创建个人知识库，支持绑定向量化模型、设置名称、描述、背景色和图标。
+- [删除文档](https://docs.bigmodel.cn/api-reference/知识库-api/删除文档.md): 根据文档`ID`删除文档。
+- [删除知识库](https://docs.bigmodel.cn/api-reference/知识库-api/删除知识库.md): 根据知识库`ID`删除个人知识库。
+- [文档列表](https://docs.bigmodel.cn/api-reference/知识库-api/文档列表.md): 获取指定知识库下的文档列表。
+- [文档详情](https://docs.bigmodel.cn/api-reference/知识库-api/文档详情.md): 根据文档`ID`获取文档详情。
+- [知识库使用量](https://docs.bigmodel.cn/api-reference/知识库-api/知识库使用量.md): 获取个人知识库的使用量详情，包括字数和字节数。
+- [知识库列表](https://docs.bigmodel.cn/api-reference/知识库-api/知识库列表.md): 获取个人知识库列表，支持分页。
+- [知识库检索](https://docs.bigmodel.cn/api-reference/知识库-api/知识库检索.md): 用于检索个人知识库，支持向量检索、关键词检索、混合检索，支持自定义重排模型。
+- [知识库详情](https://docs.bigmodel.cn/api-reference/知识库-api/知识库详情.md): 根据知识库`ID`获取个人知识库详情。
+- [编辑知识库](https://docs.bigmodel.cn/api-reference/知识库-api/编辑知识库.md): 用于编辑已经创建好的个人知识库，仅传入要修改的字段。
+- [解析文档图片](https://docs.bigmodel.cn/api-reference/知识库-api/解析文档图片.md): 用于获取文件下解析到的图片序号和图片链接映射关系。
+- [重新向量化](https://docs.bigmodel.cn/api-reference/知识库-api/重新向量化.md): 用于重新向量化文档（重试等操作）。同步返回成功表示调用成功，向量化完成后调用`callback_url`进行通知，也可调用知识详情接口获取结果。多用于`url`知识场景。
+- [错误码](https://docs.bigmodel.cn/cn/api/api-code.md)
+- [使用概述](https://docs.bigmodel.cn/cn/api/introduction.md)
+- [速率限制](https://docs.bigmodel.cn/cn/api/rate-limit.md)
+- [音视频通话](https://docs.bigmodel.cn/cn/asyncapi/realtime.md): [GLM-Realtime](/cn/guide/models/sound-and-video/glm-realtime) 提供实时音视频通话和多模态交互能力，支持实时语音对话、视频理解、函数调用等功能。<br/> 由于浏览器安全考虑禁止 `WebSocket` 添加鉴权认证请求头，无法在此直接体验，使用详情请参考 [Realtime 指南使用](/cn/guide/models/sound-and-video/glm-realtime)。
+- [学术数据处理](https://docs.bigmodel.cn/cn/best-practice/case/academic-data.md): 论文总结翻译润色
+- [智能作文批改](https://docs.bigmodel.cn/cn/best-practice/case/ai-essay-correction.md): 多文体作文批改
+- [AI搜索引擎](https://docs.bigmodel.cn/cn/best-practice/case/ai-search-engine.md): 多智能体 - AI搜索引擎
+- [ 数据分析](https://docs.bigmodel.cn/cn/best-practice/case/data-analysis.md): 一种能够自动化处理数据分析任务的解决方案
+- [数据提取](https://docs.bigmodel.cn/cn/best-practice/case/data-extraction.md): 招投标数据提取方案
+- [金融应用](https://docs.bigmodel.cn/cn/best-practice/case/financial-application.md): 金融行业大模型应用的背景、业务需求、解决方案
+- [人力招聘](https://docs.bigmodel.cn/cn/best-practice/case/hr-recruitment.md): 智能人岗匹配综合解决方案
+- [智能翻译](https://docs.bigmodel.cn/cn/best-practice/case/intelligent-translation.md): 从传统机翻到智能语境适配。
+- [办公提效](https://docs.bigmodel.cn/cn/best-practice/case/office-efficiency.md): 飞书多维表格字段插件
+- [社媒翻译](https://docs.bigmodel.cn/cn/best-practice/case/social-media-translation.md): 社交媒体多语种翻译
+- [AI 模拟面试官](https://docs.bigmodel.cn/cn/best-practice/creativepractice/aimockinterviewer.md)
+- [AI早报生成](https://docs.bigmodel.cn/cn/best-practice/creativepractice/aimorningnewspaper.md)
+- [GraphRAG](https://docs.bigmodel.cn/cn/best-practice/creativepractice/graphrag.md)
+- [汉语新解](https://docs.bigmodel.cn/cn/best-practice/creativepractice/interpretation.md)
+- [播客生成](https://docs.bigmodel.cn/cn/best-practice/creativepractice/podcastgeneration.md)
+- [编辑视频](https://docs.bigmodel.cn/cn/best-practice/creativepractice/video.md)
+- [批量处理](https://docs.bigmodel.cn/cn/best-practice/prompt/batch-prompt.md): 适用于无需即时反馈但需要处理大量请求的场景。
+- [图像生成](https://docs.bigmodel.cn/cn/best-practice/prompt/image-prompt.md): 掌握图像生成模型 Prompt 设计的核心方法
+- [评测工具](https://docs.bigmodel.cn/cn/best-practice/prompt/modelevaluation.md): 智谱 Bigmodel 目前支持的两种自动评测方式。
+- [语言模型](https://docs.bigmodel.cn/cn/best-practice/prompt/talk-prompt.md): 掌握复杂场景下的语言模型 Prompt 工程
+- [视频生成](https://docs.bigmodel.cn/cn/best-practice/prompt/video-prompt.md): Prompt 工程视频生成模型
+- [活动规则](https://docs.bigmodel.cn/cn/coding-plan/credit-campaign-rules.md): 邀请好友得赠金
+- [一键安装助手](https://docs.bigmodel.cn/cn/coding-plan/extension/coding-tool-helper.md)
+- [GLM in Excel（Beta）](https://docs.bigmodel.cn/cn/coding-plan/extension/glm-in-excel.md)
+- [常见问题](https://docs.bigmodel.cn/cn/coding-plan/faq.md)
+- [Agentic 扩展组件](https://docs.bigmodel.cn/cn/coding-plan/learning-resources/agentic-extension.md): 理解在 Agentic Coding 中如何扩展能力：包括上下文文件、Skills、Subagent、外部工具连接以及自动化机制。
+- [最佳实践](https://docs.bigmodel.cn/cn/coding-plan/learning-resources/best-practice.md): Coding Agent 最佳实践：从 Prompt、Plan 到 Skills 与 Workflow 治理
+- [常用工作流](https://docs.bigmodel.cn/cn/coding-plan/learning-resources/common-workflow.md): 介绍了日常开发中的一些实用工作流，可以根据自己的项目进行调整使用。
+- [Coding Agent 工作原理](https://docs.bigmodel.cn/cn/coding-plan/learning-resources/how-coding-agent-works.md): 了解 Agent 循环机制、内置工具，以及 Coding Agent 如何与项目进行交互。
+- [记忆机制](https://docs.bigmodel.cn/cn/coding-plan/learning-resources/memory-mechanism.md)
+- [网页读取 MCP](https://docs.bigmodel.cn/cn/coding-plan/mcp/reader-mcp-server.md)
+- [联网搜索 MCP](https://docs.bigmodel.cn/cn/coding-plan/mcp/search-mcp-server.md)
+- [视觉理解 MCP](https://docs.bigmodel.cn/cn/coding-plan/mcp/vision-mcp-server.md)
+- [开源仓库 MCP](https://docs.bigmodel.cn/cn/coding-plan/mcp/zread-mcp-server.md)
+- [套餐概览](https://docs.bigmodel.cn/cn/coding-plan/overview.md)
+- [快速开始](https://docs.bigmodel.cn/cn/coding-plan/quick-start.md)
+- [团队版权益](https://docs.bigmodel.cn/cn/coding-plan/team.md): 了解 GLM Coding Plan 团队版的用量、权益和使用规则
+- [接入工具](https://docs.bigmodel.cn/cn/coding-plan/tool/others.md)
+- [使用须知](https://docs.bigmodel.cn/cn/coding-plan/usage-notes.md)
+- [如何切换模型](https://docs.bigmodel.cn/cn/coding-plan/using5-1.md)
+- [API 错误码](https://docs.bigmodel.cn/cn/faq/api-code.md)
+- [API 调用](https://docs.bigmodel.cn/cn/faq/api-issues.md)
+- [实名认证](https://docs.bigmodel.cn/cn/faq/authentication-issues.md)
+- [Batch API](https://docs.bigmodel.cn/cn/faq/batch-api-issues.md)
+- [商业授权申请](https://docs.bigmodel.cn/cn/faq/business-authorization.md)
+- [费用问题](https://docs.bigmodel.cn/cn/faq/fee-issues.md)
+- [发票问题](https://docs.bigmodel.cn/cn/faq/invoice-issues.md)
+- [知识库](https://docs.bigmodel.cn/cn/faq/knowledge-base.md)
+- [注册登录](https://docs.bigmodel.cn/cn/faq/registration-login.md)
+- [用户权益](https://docs.bigmodel.cn/cn/faq/user-rights.md)
+- [AI漫画](https://docs.bigmodel.cn/cn/guide/agents/aicaricature.md)
+- [AI绘图](https://docs.bigmodel.cn/cn/guide/agents/aidrawing.md)
+- [票据识别](https://docs.bigmodel.cn/cn/guide/agents/bill.md)
+- [衣物识别](https://docs.bigmodel.cn/cn/guide/agents/clothes.md)
+- [合同解析](https://docs.bigmodel.cn/cn/guide/agents/contract.md)
+- [客服话术质检](https://docs.bigmodel.cn/cn/guide/agents/customer.md)
+- [影视字幕翻译](https://docs.bigmodel.cn/cn/guide/agents/film.md)
+- [GLM PPT](https://docs.bigmodel.cn/cn/guide/agents/glm-ppt.md)
+- [作业批改](https://docs.bigmodel.cn/cn/guide/agents/homeworkcorrection.md)
+- [简历与岗位匹配助手](https://docs.bigmodel.cn/cn/guide/agents/job.md)
+- [社交媒体翻译](https://docs.bigmodel.cn/cn/guide/agents/media.md)
+- [销售质检](https://docs.bigmodel.cn/cn/guide/agents/sale.md)
+- [社科文学翻译](https://docs.bigmodel.cn/cn/guide/agents/social.md)
+- [智能解题](https://docs.bigmodel.cn/cn/guide/agents/solving.md)
+- [热门特效视频](https://docs.bigmodel.cn/cn/guide/agents/specialeffectsvideos.md)
+- [招标解析](https://docs.bigmodel.cn/cn/guide/agents/tender.md)
+- [通用翻译](https://docs.bigmodel.cn/cn/guide/agents/translation.md)
+- [中标解析](https://docs.bigmodel.cn/cn/guide/agents/winningbidder.md)
+- [上下文缓存](https://docs.bigmodel.cn/cn/guide/capabilities/cache.md)
+- [工具调用](https://docs.bigmodel.cn/cn/guide/capabilities/function-calling.md)
+- [工具流式输出](https://docs.bigmodel.cn/cn/guide/capabilities/stream-tool.md)
+- [流式消息](https://docs.bigmodel.cn/cn/guide/capabilities/streaming.md)
+- [结构化输出](https://docs.bigmodel.cn/cn/guide/capabilities/struct-output.md)
+- [深度思考](https://docs.bigmodel.cn/cn/guide/capabilities/thinking.md)
+- [思考模式](https://docs.bigmodel.cn/cn/guide/capabilities/thinking-mode.md): GLM 提供多种思考模式，覆盖从常规对话到工具调用与编码智能体的不同需求。下文将分别说明各模式的启用方式、关键注意事项与示例用法。
+- [Claude API 兼容](https://docs.bigmodel.cn/cn/guide/develop/claude/introduction.md)
+- [HTTP API 调用](https://docs.bigmodel.cn/cn/guide/develop/http/introduction.md)
+- [官方 Java SDK](https://docs.bigmodel.cn/cn/guide/develop/java/introduction.md)
+- [LangChain 集成](https://docs.bigmodel.cn/cn/guide/develop/langchain/introduction.md)
+- [OpenAI API 兼容](https://docs.bigmodel.cn/cn/guide/develop/openai/introduction.md)
+- [官方 Python SDK](https://docs.bigmodel.cn/cn/guide/develop/python/introduction.md)
+- [Embedding-2](https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-2.md)
+- [Embedding-3](https://docs.bigmodel.cn/cn/guide/models/embedding/embedding-3.md)
+- [CogVideoX-Flash](https://docs.bigmodel.cn/cn/guide/models/free/cogvideox-flash.md)
+- [Cogview-3-Flash](https://docs.bigmodel.cn/cn/guide/models/free/cogview-3-flash.md)
+- [GLM-4-Flash-250414](https://docs.bigmodel.cn/cn/guide/models/free/glm-4-flash-250414.md)
+- [GLM-4.1V-Thinking-Flash](https://docs.bigmodel.cn/cn/guide/models/free/glm-4.1v-thinking-flash.md)
+- [GLM-4.6V-Flash](https://docs.bigmodel.cn/cn/guide/models/free/glm-4.6v-flash.md)
+- [GLM-4.7-Flash](https://docs.bigmodel.cn/cn/guide/models/free/glm-4.7-flash.md)
+- [GLM-4V-Flash](https://docs.bigmodel.cn/cn/guide/models/free/glm-4v-flash.md)
+- [CharGLM-4](https://docs.bigmodel.cn/cn/guide/models/humanoid/charglm-4.md)
+- [Emohaa](https://docs.bigmodel.cn/cn/guide/models/humanoid/emohaa.md)
+- [CogView-4](https://docs.bigmodel.cn/cn/guide/models/image-generation/cogview-4.md)
+- [GLM-Image](https://docs.bigmodel.cn/cn/guide/models/image-generation/glm-image.md)
+- [GLM-4-Voice](https://docs.bigmodel.cn/cn/guide/models/sound-and-video/glm-4-voice.md)
+- [GLM-ASR-2512](https://docs.bigmodel.cn/cn/guide/models/sound-and-video/glm-asr-2512.md)
+- [GLM-Realtime](https://docs.bigmodel.cn/cn/guide/models/sound-and-video/glm-realtime.md)
+- [GLM-TTS](https://docs.bigmodel.cn/cn/guide/models/sound-and-video/glm-tts.md)
+- [GLM-TTS-Clone](https://docs.bigmodel.cn/cn/guide/models/sound-and-video/glm-tts-clone.md)
+- [GLM-4.5](https://docs.bigmodel.cn/cn/guide/models/text/glm-4.5.md)
+- [GLM-4.6](https://docs.bigmodel.cn/cn/guide/models/text/glm-4.6.md)
+- [GLM-4.7](https://docs.bigmodel.cn/cn/guide/models/text/glm-4.7.md)
+- [GLM-5](https://docs.bigmodel.cn/cn/guide/models/text/glm-5.md)
+- [GLM-5-Turbo](https://docs.bigmodel.cn/cn/guide/models/text/glm-5-turbo.md)
+- [GLM-5.1](https://docs.bigmodel.cn/cn/guide/models/text/glm-5.1.md)
+- [CogVideoX-3](https://docs.bigmodel.cn/cn/guide/models/video-generation/cogvideox-3.md)
+- [Vidu 2](https://docs.bigmodel.cn/cn/guide/models/video-generation/vidu2.md)
+- [Vidu Q1](https://docs.bigmodel.cn/cn/guide/models/video-generation/viduq1.md)
+- [AutoGLM-Phone](https://docs.bigmodel.cn/cn/guide/models/vlm/autoglm-phone.md)
+- [GLM-4.1V-Thinking](https://docs.bigmodel.cn/cn/guide/models/vlm/glm-4.1v-thinking.md)
+- [GLM-4.6V](https://docs.bigmodel.cn/cn/guide/models/vlm/glm-4.6v.md)
+- [GLM-5V-Turbo](https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5v-turbo.md)
+- [GLM-OCR](https://docs.bigmodel.cn/cn/guide/models/vlm/glm-ocr.md)
+- [用户权益](https://docs.bigmodel.cn/cn/guide/platform/equity-explain.md): 了解智谱AI 用户权益体系，通过积分提升等级，享受模型并发权益和平台服务。
+- [模型备案](https://docs.bigmodel.cn/cn/guide/platform/filing.md): 查看智谱AI已备案的生成式人工智能服务信息，确保合规使用
+- [智能体开发平台](https://docs.bigmodel.cn/cn/guide/platform/intelligent-agent.md)
+- [模型迁移](https://docs.bigmodel.cn/cn/guide/platform/model-migration.md): 从 OpenAI 模型快速迁移到智谱AI，享受便捷的搬家计划和兼容性支持
+- [提示词工程](https://docs.bigmodel.cn/cn/guide/platform/prompt.md): 掌握GLM语言模型和CogView图像生成模型的提示词技巧，获得更好的生成效果
+- [内容安全](https://docs.bigmodel.cn/cn/guide/platform/securityaudit.md): 了解智谱AI的内容安全审核机制，确保AI应用的安全可控和合规使用
+- [核心参数](https://docs.bigmodel.cn/cn/guide/start/concept-param.md)
+- [平台介绍](https://docs.bigmodel.cn/cn/guide/start/introduction.md): Z智谱·一站式大模型开发平台
+- [迁移至 GLM-5.1](https://docs.bigmodel.cn/cn/guide/start/migrate-to-glm-new.md)
+- [模型概览](https://docs.bigmodel.cn/cn/guide/start/model-overview.md)
+- [快速开始](https://docs.bigmodel.cn/cn/guide/start/quick-start.md)
+- [批量处理](https://docs.bigmodel.cn/cn/guide/tools/batch.md)
+- [模型评测](https://docs.bigmodel.cn/cn/guide/tools/evaluation.md)
+- [(旧)文件内容抽取](https://docs.bigmodel.cn/cn/guide/tools/file-extract.md): 从文件中提取文本信息，可用于文件问答等 AI 服务。文件管理请参考文件 API。
+- [新文件解析服务](https://docs.bigmodel.cn/cn/guide/tools/file-parser.md)
+- [新文件同步解析服务](https://docs.bigmodel.cn/cn/guide/tools/file-parser-sync.md)
+- [模型微调](https://docs.bigmodel.cn/cn/guide/tools/fine-tuning.md)
+- [GLM in Excel（Beta）](https://docs.bigmodel.cn/cn/guide/tools/glm-in-excel.md)
+- [上下文增强技术报告](https://docs.bigmodel.cn/cn/guide/tools/knowledge/contextual.md)
+- [知识处理及检索](https://docs.bigmodel.cn/cn/guide/tools/knowledge/multimodal-retrieval.md): 支持文本 / 图片 / 音频 / 视频的跨模态智能检索与问答平台
+- [知识库服务计费](https://docs.bigmodel.cn/cn/guide/tools/knowledge/price.md)
+- [知识问答](https://docs.bigmodel.cn/cn/guide/tools/knowledge/q&a.md): 支持在体验中心文本模型与视觉模型入口中调用知识库能力，结合知识库内容完成检索与问答。
+- [对话调用知识库](https://docs.bigmodel.cn/cn/guide/tools/knowledge/retrieval.md)
+- [模型部署](https://docs.bigmodel.cn/cn/guide/tools/model-deploy.md)
+- [联网搜索](https://docs.bigmodel.cn/cn/guide/tools/web-search.md)
+- [OCR 服务](https://docs.bigmodel.cn/cn/guide/tools/zhipu-ocr.md)
+- [注销协议](https://docs.bigmodel.cn/cn/terms/cancellation-agreement.md): 账户注销服务协议
+- [主体变更协议](https://docs.bigmodel.cn/cn/terms/entity-change-agreement.md): 服务主体变更协议
+- [模型商用许可协议](https://docs.bigmodel.cn/cn/terms/model-commercial-use.md): 特别提示：您在选择使用北京智谱华章科技股份有限公司的模型前，请事先认真阅读本协议的条款及内容，特别是关于使用者义务、保证否认及责任限制的条款。使用者使用《模型商用授权申请》及本协议中所涉及的模型即表示完全接受并同意遵守本协议的全部内容。如您不同意本协议的条款，请不要选择付款并立即停止使用大模型。
+- [自律性原则声明](https://docs.bigmodel.cn/cn/terms/principle.md): 智谱以增进人类共同福祉为目标，致力于人工智能技术研究，坚持技术中立原则，推进人工智能技术的合理应用。
+- [隐私政策](https://docs.bigmodel.cn/cn/terms/privacy-policy.md): 隐私保护政策说明
+- [充值协议](https://docs.bigmodel.cn/cn/terms/recharge-agreement.md): 尊敬的用户，为保障您的合法权益，请您在点击“购买”按钮前，完整、仔细地阅读本充值协议，当您点击“立即购买”按钮，即表示您已阅读、理解本协议内容，并同意按照本协议约定的规则进行充值和使用余额行为。如您不接受本协议的部分或全部内容，请您不要点击“立即购买”按钮。
+- [安全与风险提示](https://docs.bigmodel.cn/cn/terms/security-risk-notice.md): 平台的 API 可以支持广泛的应用，例如问答、写作和对话。虽然使用我们的 API 能为最终用户创造便利，但它也可能产生安全问题，本文档旨在帮助客户了解使用 API 时可能出现的安全问题。 本文档首先介绍如何将 API 作为产品或服务的一部分并进行安全调用，然后列举了几个要考虑的特定问题，提供了有关风险的一般指导，并特别提供了关于稳健性和公平性的进一步指导。
+- [服务协议](https://docs.bigmodel.cn/cn/terms/service-agreement.md): 服务条款和使用协议
+- [订阅及自动续费协议](https://docs.bigmodel.cn/cn/terms/subscription-agreement.md)
+- [用户协议](https://docs.bigmodel.cn/cn/terms/user-agreement.md): 用户服务协议
+- [功能更新](https://docs.bigmodel.cn/cn/update/feature-updates.md): 平台功能改进和优化记录
+- [新品发布](https://docs.bigmodel.cn/cn/update/new-releases.md): 最新模型和产品发布公告
+
+## OpenAPI Specs
+
+- [openapi](https://docs.bigmodel.cn/openapi/openapi.json)
+- [openapi-en](https://docs.bigmodel.cn/openapi/openapi-en.json)
+
+## AsyncAPI Specs
+
+- [asyncapi](https://docs.bigmodel.cn/asyncapi/asyncapi.json)
+- [asyncapi-en](https://docs.bigmodel.cn/asyncapi/asyncapi-en.json)
