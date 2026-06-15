@@ -121,7 +121,17 @@ def locate_segments(clip_description: str, subtitle_text: str) -> list[dict]:
     ]
     """
     # 字幕太長時截斷，避免超出 context window
-    truncated = subtitle_text[:6000]
+    # 策略：取頭 + 尾，保留中後段內容而非只取開頭
+    max_chars = 6000
+    if len(subtitle_text) > max_chars:
+        half = max_chars // 2
+        truncated = (
+            subtitle_text[:half]
+            + f"\n...(中間 {len(subtitle_text) - max_chars} 字省略)...\n"
+            + subtitle_text[-half:]
+        )
+    else:
+        truncated = subtitle_text
 
     prompt = f"""你是一位視頻剪輯助理。用戶想從以下字幕中找出特定片段。
 
@@ -131,7 +141,7 @@ def locate_segments(clip_description: str, subtitle_text: str) -> list[dict]:
 【字幕內容（格式：[MM:SS] 文字）】
 {truncated}
 
-請找出所有匹配點位描述的時間段，輸出 JSON 數組。
+請找出與點位描述最相關的 1-3 個時間段，輸出 JSON 數組。
 每個時間段比實際匹配內容各延伸 5 秒，確保畫面完整。
 
 輸出格式（只輸出 JSON，不要其他文字）：
@@ -143,7 +153,8 @@ def locate_segments(clip_description: str, subtitle_text: str) -> list[dict]:
   }}
 ]
 
-如果找不到匹配片段，返回空數組 []。
+如果沒有精確匹配，請找出最接近的片段（例如影片高潮、衝突點、關鍵發言）。
+務必至少輸出一個片段，不要輸出空數組。
 """
 
     response = _client.chat.completions.create(

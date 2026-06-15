@@ -724,6 +724,47 @@
     gap: 12px;
     flex-wrap: wrap;
   }
+
+  /* 模式切换按钮 */
+  .mode-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .15s;
+  }
+  .mode-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,255,71,.06);
+  }
+  .mode-btn:hover { border-color: var(--accent); }
+
+  /* 批量多段结果卡片 */
+  .batch-clips { max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:12px; }
+  .batch-clip-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 20px;
+    animation: slideIn .3s ease both;
+  }
+  .batch-clip-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .batch-clip-filename { font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 6px; }
+  .batch-clip-meta  { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 6px; }
+  .batch-clip-reason { font-size: 12px; color: #a0a0b8; line-height: 1.6; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -738,7 +779,7 @@
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('search')">▸ RADAR 素材搜索</button>
   <button class="tab-btn" onclick="switchTab('copy')">▸ COPY 文案生成</button>
-  <button class="tab-btn" onclick="switchTab('clip')">▸ CLIP 智能剪辑</button>
+  <!-- V1 已停用，暂时隐藏：<button class="tab-btn" onclick="switchTab('clip')">▸ CLIP 智能剪辑</button> -->
   <button class="tab-btn" onclick="switchTab('clipv2')">▸ CLIP V2 上传剪辑</button>
 </div>
 
@@ -898,8 +939,15 @@
     </div>
   </div>
 
-  <!-- 时长选择 -->
-  <div class="filter-bar">
+  <!-- 剪辑模式切换 -->
+  <div class="mode-toggle" style="max-width:720px;margin:0 auto 16px;display:flex;gap:8px;">
+    <button class="mode-btn active" id="modeSingle" onclick="setClipMode('single')">單視頻剪輯</button>
+    <button class="mode-btn" id="modeBatch" onclick="setClipMode('batch')">批量剪輯</button>
+    <span style="font-size:11px;color:var(--muted);margin-left:auto;align-self:center;" id="batchHint"></span>
+  </div>
+
+  <!-- 时长选择（仅单视频模式） -->
+  <div class="filter-bar" id="durationBar">
     <span class="filter-label">TARGET</span>
     <div class="filter-options">
       <button class="filter-btn" data-dur="15" onclick="setClipDuration(this)">15s</button>
@@ -911,7 +959,7 @@
 
   <!-- 提交行 -->
   <div class="copy-action" style="max-width:720px;margin:0 auto 32px;">
-    <span class="copy-hint">AI 視覺模型分析畫面 + 智能剪輯</span>
+    <span class="copy-hint" id="clipv2Hint">AI 視覺模型分析畫面 + 智能剪輯</span>
     <button id="clipv2Btn" onclick="doClipV2()">分析 →</button>
   </div>
 
@@ -1389,7 +1437,28 @@ function copyClipUrl(videoId, startSec) {
 // ══════════════════════════════════════════
 
 let selectedClipDuration = 20;
-let selectedVideoFile = null;
+let selectedVideoFile  = null;
+let clipMode = 'single';   // 'single' | 'batch'
+
+function setClipMode(mode) {
+  clipMode = mode;
+  document.getElementById('modeSingle').classList.toggle('active', mode === 'single');
+  document.getElementById('modeBatch').classList.toggle('active', mode === 'batch');
+
+  const durBar  = document.getElementById('durationBar');
+  const hintEl  = document.getElementById('clipv2Hint');
+  const batchHint = document.getElementById('batchHint');
+
+  if (mode === 'batch') {
+    durBar.style.display = 'none';
+    hintEl.textContent = '一次产出 5~8 个不雷同的 15~20s 短视频';
+    batchHint.textContent = '💡 建议上传 5 分钟以上影片';
+  } else {
+    durBar.style.display = '';
+    hintEl.textContent = 'AI 视觉模型分析画面 + 智能剪辑';
+    batchHint.textContent = '';
+  }
+}
 
 function setClipDuration(btn) {
   document.querySelectorAll('#panel-clipv2 .filter-btn').forEach(b => b.classList.remove('active'));
@@ -1466,7 +1535,10 @@ async function doClipV2() {
     const formData = new FormData();
     formData.append('video', selectedVideoFile);
     formData.append('description', description);
-    formData.append('duration', selectedClipDuration);
+    formData.append('mode', clipMode);
+    if (clipMode === 'single') {
+      formData.append('duration', selectedClipDuration);
+    }
 
     const res = await fetch('/api/clip_v2', {
       method: 'POST',
@@ -1482,7 +1554,11 @@ async function doClipV2() {
     }
 
     status.innerHTML = '';
-    renderClipV2Result(data);
+    if (clipMode === 'batch') {
+      renderClipV2BatchResult(data);
+    } else {
+      renderClipV2Result(data);
+    }
 
   } catch (e) {
     results.innerHTML = `<div class="error-msg">⚠ 网络错误：${e.message}</div>`;
@@ -1514,6 +1590,51 @@ function renderClipV2Result(data) {
           下載影片
         </a>
       </div>
+    </div>
+  `;
+}
+
+function renderClipV2BatchResult(data) {
+  const results = document.getElementById('clipv2-results');
+  const clips = data.clips || [];
+  if (clips.length === 0) {
+    results.innerHTML = `<div class="error-msg">⚠ 未能产出任何片段，请尝试上传更长的影片</div>`;
+    return;
+  }
+
+  const allAuto = clips.every(c => (c.reason || '').includes('自动补充'));
+  const autoNote = allAuto
+    ? '<div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:16px;">⚠ 影片未找到匹配内容，已自动选取片段</div>'
+    : '';
+
+  results.innerHTML = `
+    <div style="max-width:720px;margin:0 auto 16px;text-align:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:14px;color:var(--accent);letter-spacing:2px;">✂ 批量剪辑完成</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">共 ${clips.length} 段 · 15~20s / 段</div>
+    </div>
+    ${autoNote}
+    <div class="batch-clips">
+      ${clips.map((c, i) => `
+        <div class="batch-clip-card" style="animation-delay:${i * 0.06}s">
+          <div class="batch-clip-num">片段 ${String(i + 1).padStart(2, '0')}</div>
+          <div class="batch-clip-filename">${escHtml(c.filename)}</div>
+          <div class="batch-clip-meta">
+            ${escHtml(c.start_fmt || secToTimestamp(c.start_sec))} → ${escHtml(c.end_fmt || secToTimestamp(c.end_sec))}
+            &nbsp;│&nbsp; ${c.duration}s
+          </div>
+          <div class="batch-clip-reason">📍 ${escHtml(c.reason)}</div>
+          <div class="clipv2-result-actions">
+            <a class="download-btn" href="${c.download_url}" download>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              下载影片
+            </a>
+          </div>
+        </div>
+      `).join('')}
     </div>
   `;
 }

@@ -12,7 +12,7 @@ from services.search      import search_youtube_funnel
 from services.filter      import filter_by_date, analyze_and_filter
 from services.copy_writer import generate_copy
 from services.clipper         import analyze_clip
-from services.vision_clipper import analyze_video
+from services.vision_clipper import analyze_video, analyze_video_batch, get_max_batch_segments
 from services.video_processor import save_upload, cut_video
 from config                   import (DOWNLOAD_DIR, OUTPUT_DIR,
                                        UPLOAD_DIR, CLIP_OUT_DIR,
@@ -169,27 +169,56 @@ def api_clip_v2():
     if not description:
         return jsonify({"error": "請輸入剪輯描述"}), 400
 
-    try:
-        target = int(request.form.get("duration", CLIP_DEFAULT_DURATION))
-    except ValueError:
-        target = CLIP_DEFAULT_DURATION
-    target = max(CLIP_MIN_DURATION, min(CLIP_MAX_DURATION, target))
+    mode = request.form.get("mode", "single").strip()
 
     try:
         # 1. 保存上传
         video_path = save_upload(file)
 
-        # 2. GLM 视觉分析
+        if mode == "batch":
+            # ── 批量模式 ──
+            segments = analyze_video_batch(str(video_path), description)
+
+            clips = []
+            for seg in segments:
+                try:
+                    dur = seg["end_sec"] - seg["start_sec"]
+                    out_path = cut_video(video_path, seg["start_sec"], dur)
+                    clips.append({
+                        "filename":      out_path.name,
+                        "duration":      round(dur, 1),
+                        "start_sec":     round(seg["start_sec"], 1),
+                        "end_sec":       round(seg["end_sec"], 1),
+                        "start_fmt":     seg["start_fmt"],
+                        "end_fmt":       seg["end_fmt"],
+                        "download_url":  f"/api/clip_v2/download/{out_path.name}",
+                        "reason":        seg["reason"],
+                    })
+                except Exception as e:
+                    print(f"[Batch] 切割失败 ({seg['start_fmt']}~{seg['end_fmt']}): {e}")
+
+            return jsonify({
+                "status": "ok",
+                "clips":  clips,
+                "total":  len(clips),
+            })
+
+        # ── 单视频模式（默认）──
+        try:
+            target = int(request.form.get("duration", CLIP_DEFAULT_DURATION))
+        except ValueError:
+            target = CLIP_DEFAULT_DURATION
+        target = max(CLIP_MIN_DURATION, min(CLIP_MAX_DURATION, target))
+
         seg = analyze_video(str(video_path), description, target)
 
-        # 3. FFmpeg 切割
-        duration = seg["end_sec"] - seg["start_sec"]
-        out_path = cut_video(video_path, seg["start_sec"], duration)
+        dur = seg["end_sec"] - seg["start_sec"]
+        out_path = cut_video(video_path, seg["start_sec"], dur)
 
         return jsonify({
             "status":        "ok",
             "filename":      out_path.name,
-            "duration":      round(duration, 1),
+            "duration":      round(dur, 1),
             "start_sec":     round(seg["start_sec"], 1),
             "end_sec":       round(seg["end_sec"], 1),
             "start_fmt":     seg["start_fmt"],

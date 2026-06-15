@@ -36,6 +36,18 @@ CLIP_DEFAULT_DURATION = 20          # 默认目标秒数
 CLIP_MIN_DURATION     = 15
 CLIP_MAX_DURATION     = 30
 
+# ─── CLIP V2 批量剪辑配置 ────────────────────────────────────────────────────
+
+BATCH_MIN_SEGMENTS    = 5           # 批量最少片段数
+BATCH_MAX_SEGMENTS    = 8           # 批量最多片段数
+BATCH_SEG_MIN_LEN     = 12          # 单段最短（去重后合法下限）
+BATCH_SEG_DEFAULT     = 17          # 批量补段时默认段长
+BATCH_SEG_TARGET_MIN  = 15          # 批量单段最短目标
+BATCH_SEG_TARGET_MAX  = 20          # 批量单段最长目标
+BATCH_SEG_GAP         = 3           # 片段最小间隔（秒）
+BATCH_OVERLAP_RATIO   = 0.3         # 去重：重叠比例阈值
+BATCH_FRAME_STEP_MIN  = 2.5         # 批量采样最小步长
+
 # 上传 / 输出目录
 UPLOAD_DIR            = "uploads"
 CLIP_OUT_DIR          = "outputs/clips"
