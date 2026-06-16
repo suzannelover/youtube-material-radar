@@ -108,16 +108,18 @@ def cut_video(
 
     cmd = [
         FFMPEG,
-        "-ss", str(ss),
+        "-ss", str(ss),          # 输入侧快速粗定位（跳关键帧）
         "-i", str(input_path),
+        "-ss", "0.01",           # 输出侧精确定位（从粗定位后重定位）
         "-t", str(duration),
         "-c:v", "libx264",
         "-crf", "23",
-        "-preset", "fast",
+        "-preset", "ultrafast",  # 短片段用最快编码
         "-c:a", "aac",
         "-map", "0:v",
         "-map", "0:a?",
-        "-y",                   # 覆盖已有文件
+        "-avoid_negative_ts", "make_zero",
+        "-y",                    # 覆盖已有文件
         str(out_path),
     ]
 

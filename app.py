@@ -5,6 +5,7 @@ app.py
 """
 
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from flask import Flask, request, jsonify, send_from_directory
 
 from services.keyword     import extract_keywords
@@ -179,12 +180,12 @@ def api_clip_v2():
             # ── 批量模式 ──
             segments = analyze_video_batch(str(video_path), description)
 
-            clips = []
-            for seg in segments:
+            # 并行 FFmpeg 切割（4 线程，大幅提速）
+            def _cut_one(seg, idx):
+                dur = seg["end_sec"] - seg["start_sec"]
                 try:
-                    dur = seg["end_sec"] - seg["start_sec"]
                     out_path = cut_video(video_path, seg["start_sec"], dur)
-                    clips.append({
+                    return (idx, {
                         "filename":      out_path.name,
                         "duration":      round(dur, 1),
                         "start_sec":     round(seg["start_sec"], 1),
@@ -196,6 +197,16 @@ def api_clip_v2():
                     })
                 except Exception as e:
                     print(f"[Batch] 切割失败 ({seg['start_fmt']}~{seg['end_fmt']}): {e}")
+                    return (idx, None)
+
+            results = {}
+            with ThreadPoolExecutor(max_workers=4) as executor:
+                futures = {executor.submit(_cut_one, seg, i): i for i, seg in enumerate(segments)}
+                for future in as_completed(futures):
+                    idx, clip = future.result()
+                    results[idx] = clip
+
+            clips = [results[i] for i in sorted(results) if results[i] is not None]
 
             return jsonify({
                 "status": "ok",
