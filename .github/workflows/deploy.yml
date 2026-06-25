@@ -8,28 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH
-        env:
-          SSH_KEY_B64: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Trigger deploy webhook
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY_B64" | base64 -d > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -s" << 'ENDSCRIPT'
-          set -e
-          cd /opt/youtube-radar
-          echo "=== [1/4] git pull ==="
-          git pull origin dev
-
-          echo "=== [2/4] pip install ==="
-          source venv/bin/activate
-          pip install -r requirements.txt -q
-          deactivate
-
-          echo "=== [3/4] restart gunicorn ==="
-          sudo systemctl restart youtube-radar
-
-          echo "=== [4/4] health check ==="
-          sleep 2
-          bash deploy/check.sh
-          ENDSCRIPT
+          curl -s -X POST https://www.videohunt.top/api/deploy \
+            -H "Content-Type: application/json" \
+            -d "{\"token\":\"${{ secrets.DEPLOY_TOKEN }}\"}"
