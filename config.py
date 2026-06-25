@@ -1,5 +1,17 @@
 # ─── 全局配置 ─────────────────────────────────────────────────────────────────
 
+import os
+
+
+def ytdlp_proxy_args() -> list[str]:
+    """如果系统设了 HTTP_PROXY，返回 yt-dlp 的 --proxy 参数"""
+    proxy = os.environ.get("HTTP_PROXY") or os.environ.get("http_proxy")
+    if not proxy:
+        return []
+    return ["--proxy", proxy]
+
+# ─── 全局配置 ─────────────────────────────────────────────────────────────────
+
 QWEN_API_KEY      = "sk-24dec5247fff469e9758bcd31fe3a324"
 SEARCH_PER_QUERY  = 5
 TARGET_CARD_COUNT = 8

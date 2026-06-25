@@ -9,7 +9,7 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from config import SEARCH_PER_QUERY, FUNNEL_THRESHOLD, TW_MEDIA
+from config import SEARCH_PER_QUERY, FUNNEL_THRESHOLD, TW_MEDIA, ytdlp_proxy_args
 
 
 def search_one_query(query: str, count: int = SEARCH_PER_QUERY) -> list[dict]:
@@ -25,6 +25,7 @@ def search_one_query(query: str, count: int = SEARCH_PER_QUERY) -> list[dict]:
         "--no-download",
         "--quiet",
         "--no-warnings",
+        *ytdlp_proxy_args(),
     ]
 
     result = subprocess.run(

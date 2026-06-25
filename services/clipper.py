@@ -18,7 +18,7 @@ from pathlib import Path
 
 from openai import OpenAI
 
-from config import QWEN_API_KEY, DOWNLOAD_DIR
+from config import QWEN_API_KEY, DOWNLOAD_DIR, ytdlp_proxy_args
 from utils.srt_parser import parse_srt, blocks_to_prompt_text, sec_to_timestamp
 
 
@@ -54,6 +54,7 @@ def download_subtitle(url: str, video_id: str) -> str | None:
         "-o", str(out_dir / "%(id)s.%(ext)s"),
         "--quiet",
         "--no-warnings",
+        *ytdlp_proxy_args(),
     ]
 
     # 先嘗試手動字幕
