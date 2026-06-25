@@ -14,7 +14,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           install -m 600 /dev/stdin ~/.ssh/id_ed25519 <<< "$SSH_KEY"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -s" << 'ENDSCRIPT'
+          ssh -vvv -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -s" << 'ENDSCRIPT'
           set -e
           cd /opt/youtube-radar
           echo "=== [1/4] git pull ==="
