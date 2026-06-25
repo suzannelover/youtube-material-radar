@@ -28,8 +28,9 @@ TW_MEDIA = [
 ]
 
 # 下载 / 输出目录
-DOWNLOAD_DIR = "downloads"
-OUTPUT_DIR   = "outputs"
+DOWNLOAD_DIR  = "downloads"
+OUTPUT_DIR    = "outputs"
+DATABASE_DIR  = "data"
 
 # ─── CLIP V2 配置 ─────────────────────────────────────────────────────────────
 

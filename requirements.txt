@@ -1,6 +1,6 @@
 flask
 yt-dlp
-flask
-yt-dlp
 openai
 opencv-python-headless
+flask-login
+gunicorn

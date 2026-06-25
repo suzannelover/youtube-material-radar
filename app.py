@@ -24,7 +24,13 @@ from config                   import (DOWNLOAD_DIR, OUTPUT_DIR,
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR,   exist_ok=True)
 
-app = Flask(__name__, static_folder=".")
+app = Flask(__name__)
+app.secret_key = os.environ.get("SECRET_KEY", os.urandom(24).hex())
+
+# ── 登录保护（全站）──
+from auth import init_auth, auth_bp
+init_auth(app)
+app.register_blueprint(auth_bp)
 app.config['MAX_CONTENT_LENGTH'] = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 
 
