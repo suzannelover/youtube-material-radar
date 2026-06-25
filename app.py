@@ -260,41 +260,6 @@ def api_clip_v2_download(filename: str):
     return send_from_directory(CLIP_OUT_DIR, filename)
 
 
-# ── Webhook 部署 ──────────────────────────────────────────────────────────────
-
-@app.route("/api/deploy", methods=["POST"])
-def api_deploy():
-    """GitHub Actions 触发自动部署，需要 token 验证"""
-    import subprocess, sys
-
-    token = request.json.get("token", "") if request.is_json else ""
-    if token != os.environ.get("DEPLOY_TOKEN", ""):
-        return jsonify({"error": "unauthorized"}), 403
-
-    try:
-        # git pull
-        out = subprocess.run(
-            ["git", "pull", "origin", "dev"],
-            cwd=os.path.dirname(os.path.abspath(__file__)),
-            capture_output=True, text=True, timeout=30
-        )
-        git_result = out.stdout.strip() or out.stderr.strip()
-
-        # restart
-        restart = subprocess.run(
-            ["sudo", "systemctl", "restart", "youtube-radar"],
-            capture_output=True, text=True, timeout=10
-        )
-
-        return jsonify({
-            "status": "ok",
-            "git": git_result,
-            "restart": "success" if restart.returncode == 0 else "failed",
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 # ── 啟動 ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":

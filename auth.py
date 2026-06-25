@@ -33,7 +33,7 @@ def init_auth(app):
     @app.before_request
     def _require_login():
         # 允许的公开端点
-        public = {"auth.login_page", "auth.login_action", "static", "api_deploy"}
+        public = {"auth.login_page", "auth.login_action", "static"}
         if request.endpoint in public:
             return None
         if not current_user.is_authenticated:
