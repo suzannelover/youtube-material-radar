@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          install -m 600 /dev/stdin ~/.ssh/id_ed25519 <<< "$SSH_KEY"
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "bash -s" << 'ENDSCRIPT'
           set -e
           cd /opt/youtube-radar
